@@ -6,3 +6,5 @@
 
 #rescue-end{position:absolute;inset:0;display:grid;place-items:center;background:#f5eee2c9;padding:20px}#rescue-end[hidden]{display:none}#again{display:block;width:100%;padding:13px;background:#eaa4ae;border:1.7px solid #303446;border-radius:8px;font:700 14px system-ui;color:#303446}#rescue-end a{display:inline-block;margin-top:18px;color:#6b7b76;font-size:12px}
 .avatar-start{display:grid;grid-template-columns:60px minmax(0,1fr) 60px;align-items:stretch;gap:7px}.avatar-choice{border:1px solid #d9d5c9;border-radius:10px;background:#eeeade;color:#768178;font:700 11px system-ui;padding:8px 2px}.avatar-choice.selected{background:#dce9df;border:2px solid #65766f;color:#303446}.avatar-start #start{font-size:14px;padding:13px 2px}@media(max-height:650px){.avatar-start #start{padding:10px 2px}}
+
+nav{gap:5px}nav button,nav a{padding:5px 9px}
