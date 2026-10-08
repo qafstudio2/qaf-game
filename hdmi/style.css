@@ -11,3 +11,5 @@ main,main *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none
 .home-button{position:absolute;z-index:5;right:66px;top:0;pointer-events:auto;font:10px system-ui;color:#fff;text-decoration:none;padding:5px 9px;border:1px solid #ffffff40;border-radius:20px;background:#ffffff16}header{pointer-events:none}header #sound{pointer-events:auto}
 
 .menu-home{display:inline-block;color:#fff;font:12px system-ui;text-decoration:none;border:1px solid #ffffff40;border-radius:16px;padding:7px 14px;margin-top:12px}
+
+.game-logo{position:absolute;right:14px;bottom:27%;width:48px;height:auto;opacity:.7;pointer-events:none;filter:invert(1)}.lab-logo{background:transparent;filter:invert(1)}
