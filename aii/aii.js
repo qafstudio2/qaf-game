@@ -109,3 +109,5 @@ function frame(ms){const dt=last?Math.min((ms-last)/1000,.05):0;last=ms;time+=dt
 
 
 
+
+const gameSurface=document.querySelector("main");for(const event of ["selectstart","contextmenu","dragstart"])gameSurface.addEventListener(event,e=>e.preventDefault());
