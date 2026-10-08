@@ -2,4 +2,5 @@
 
 .lab-logo{display:block;width:170px;height:100px;object-fit:contain;background:#fff;border-radius:10px;padding:8px;margin:0 auto 18px}.card:has(.lab-logo){padding-top:24px;padding-bottom:24px}.card:has(.lab-logo) h2{font-size:36px;margin:12px 0}
 
-html,body{position:fixed;inset:0;overscroll-behavior:none;width:100%;height:100%;touch-action:none}main{overscroll-behavior:none}#controls{justify-content:flex-end}button{-webkit-tap-highlight-color:transparent}canvas{touch-action:none}
+html,body{position:fixed;inset:0;overscroll-behavior:none;width:100%;height:100%;touch-action:none}main{overscroll-behavior:none;height:100svh}#controls{justify-content:flex-end}button{-webkit-tap-highlight-color:transparent}canvas{touch-action:none}
+@media(max-height:700px){header{top:max(12px,env(safe-area-inset-top));left:20px;right:20px}h1{font-size:26px;margin:6px 0 4px}h1 span{font-size:15px}#combo{margin-top:7px;font-size:20px}#controls{bottom:max(22px,env(safe-area-inset-bottom))}#fire{width:86px;height:86px;font-size:30px}.card{padding:20px 16px}.lab-logo{height:75px;width:145px;margin-bottom:10px}.card:has(.lab-logo) h2{font-size:30px;margin:10px 0}.card p{font-size:12px;line-height:1.8}.card button{margin:10px 0 12px;padding:13px}.card small{font-size:9px}}
