@@ -11,3 +11,5 @@ nav{gap:5px}nav button,nav a{padding:5px 9px}
 
 /* Keep rapid taps and long holds inside the game instead of iOS text selection. */
 main,main *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}main img,canvas{-webkit-user-drag:none}#pads,#pads button{touch-action:none}
+
+.menu-home{display:inline-block;color:#505e58;font:12px system-ui;text-decoration:none;padding:7px 14px;border:1px solid #d9d5c9;border-radius:16px;background:#eeeade;margin:0 0 12px}
