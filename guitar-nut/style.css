@@ -2,3 +2,15 @@
 #tool-error{position:absolute;z-index:5;left:50%;top:42%;transform:translate(-50%,-50%);pointer-events:none;color:#c75c53;font-size:90px;font-weight:800;line-height:1;text-shadow:0 2px 0 #fff,2px 0 0 #fff,-2px 0 0 #fff;background:#fff8;border-radius:50%;width:92px;text-align:center}
 
 #confetti{position:absolute;inset:0;overflow:hidden;z-index:30;pointer-events:none}#confetti i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:confetti-fall 2.8s ease-in forwards}@keyframes confetti-fall{from{transform:translate3d(0,-20px,0) rotate(0)}to{transform:translate3d(var(--drift),100svh,0) rotate(var(--spin));opacity:.3}}
+
+/* Reserve separate space for measurements, instructions, and two tool rows. */
+#scene{bottom:260px}
+#hud{bottom:137px;min-height:110px;background:#f3eee4;padding-top:10px;z-index:2}
+#instruction{color:#59655b}
+#range{color:#466a50}
+#cash{color:#59655b}
+.footnote{color:#6b7468}
+.game-logo{bottom:277px}
+button:disabled{opacity:.62}
+h1 span{color:#65715f}
+@media(max-height:620px){#scene{bottom:234px}#hud{bottom:116px;min-height:105px}.game-logo{bottom:248px}}
