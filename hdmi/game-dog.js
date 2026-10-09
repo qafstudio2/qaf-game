@@ -19,7 +19,7 @@ function fanfare(){if(!sound||!audio)return;const now=audio.currentTime;[0,.24].
 ui('sound').textContent='音效 ON';ui('sound').onclick=()=>{sound=!sound;if(sound){unlockAudio();tone(550)}else if(voiceSource){try{voiceSource.stop()}catch{}}ui('sound').textContent='音效 '+(sound?'ON':'OFF')};
 
 function hud(){ui('level').textContent=`STAGE 0${level+1} / 03`;ui('combo').textContent=Array.from({length:5},(_,i)=>i<combo?'●':'○').join(' ')}
-function start(){level=0;begin()}function begin(){combo=0;mode='play';stageTime=0;slowWindow=false;phase=0;shot=null;reveal=0;explosion=0;aim={x:0,y:0};particles=[];ui('overlay').style.display='none';ui('hint').textContent=['抓準時機，讓狗狗華麗登場。','手更晃了！對準就插！','最後一關！等突然慢下來，再出手！'][level];hud()}
+function start(){if(mode==='play'||mode==='explode')return;window.QAFGameStats?.end('hdmi');window.QAFGameStats?.start('hdmi');level=0;begin()}function begin(){combo=0;mode='play';stageTime=0;slowWindow=false;phase=0;shot=null;reveal=0;explosion=0;aim={x:0,y:0};particles=[];ui('overlay').style.display='none';ui('hint').textContent=['抓準時機，讓狗狗華麗登場。','手更晃了！對準就插！','最後一關！等突然慢下來，再出手！'][level];hud()}
 ui('start').onclick=()=>{if(sound)unlockAudio();if(mode==='clear'){level++;begin()}else start()};
 function fire(){if(mode!=='play'||shot)return;const t=tip(),p=port();shot={x:t.x,y:t.y,elapsed:0,hit:Math.abs(t.x-p.x)<15&&Math.abs(t.y-p.y)<11,resolved:false};tone(180,.12,'sawtooth')}
 ui('fire').addEventListener('pointerdown',e=>{e.preventDefault();fire()});
@@ -44,3 +44,4 @@ function frame(ms){const dt=last?Math.min((ms-last)/1000,.04):0;last=ms;update(d
 
 
 const gameSurface=document.querySelector("main");for(const event of ["selectstart","contextmenu","dragstart"])gameSurface.addEventListener(event,e=>e.preventDefault());
+

@@ -21,18 +21,18 @@ html.friend-embed{scroll-behavior:auto}
 .friend-screen iframe{height:700px;min-height:0;width:100%;display:block;border:0}
 @media(max-width:760px){.friend-catalogue{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.friend-card strong{font-size:14px}.friend-screen iframe{height:640px;min-height:0}.friend-player-bar h2{font-size:15px}.friend-back{padding:10px 11px}}
 
-</style></head><body><main><header class="site-header"><a class="home-link" href="./" aria-label="QAF 的遊戲空間，回首頁"><img class="site-logo" src="qaf-logo-clear.png" alt="QAF 標誌"><div><h1>QAF 的遊戲空間</h1><p class="subtitle">把身邊的人做成遊戲好像不太好</p></div></a></header><section class="games" aria-label="遊戲名稱與介紹">
+</style><script src="game-stats-config.js"></script><script defer src="game-stats.js"></script><style>.play-count{display:block;font-size:12px;color:#666;padding:8px 12px 0}.game-sort{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.game-sort[hidden]{display:none}.game-sort select{padding:10px;font:inherit;max-width:100%}</style></head><body><main><header class="site-header"><a class="home-link" href="./" aria-label="QAF 的遊戲空間，回首頁"><img class="site-logo" src="qaf-logo-clear.png" alt="QAF 標誌"><div><h1>QAF 的遊戲空間</h1><p class="subtitle">把身邊的人做成遊戲好像不太好</p></div></a></header><div class="game-sort"><label for="game-sort">排列方式</label><select id="game-sort"><option value="date">發布日期：新到舊</option><option value="plays">遊玩次數：多到少</option></select><small>發布日期待補齊，暫依原順序；計數服務未啟用。</small></div><section class="games" aria-label="遊戲名稱與介紹">
 <article class="game-card" id="hdmi" data-url="hdmi/dog.html" data-title="HDMI 插入傳說" data-share="穩住你的手！來挑戰三關 HDMI 插入傳說。">
-<div class="game-meta"><span class="tag">GAME 001 / MOBILE ARCADE</span><img class="lab-logo" src="qaf-logo-clear.png" alt="QAF"></div>
+<span class="play-count" data-play-count="hdmi">遊玩次數：尚未啟用</span><div class="game-meta"><span class="tag">GAME 001 / MOBILE ARCADE</span><img class="lab-logo" src="qaf-logo-clear.png" alt="QAF"></div>
 <h2>HDMI 插入傳說</h2><p class="description">一隻晃動的手，一台等待被喚醒的電視。<br>對準、插入，讓狗狗華麗登場。連中五次，挑戰三關！</p>
-<div class="game-screen"><iframe data-src="hdmi/dog.html?v=logo-home-32" title="HDMI 插入傳說遊戲畫面" allow="autoplay; fullscreen; web-share" allowfullscreen></iframe></div>
+<div class="game-screen"><iframe data-src="hdmi/dog.html?v=play-counts-20261010" title="HDMI 插入傳說遊戲畫面" allow="autoplay; fullscreen; web-share" allowfullscreen></iframe></div>
 <p class="controls-note">等手對準接口，按「插！」。<br>手機可以點「全螢幕玩」進入直式遊戲。</p>
 <div class="actions" aria-label="HDMI 遊戲分享與開啟"><a class="play" href="hdmi/dog.html">全螢幕玩 ↗</a><button data-action="facebook">分享到 Facebook</button><button data-action="share">分享遊戲 ↗</button><button data-action="copy">複製連結</button></div><p class="notice" role="status"></p>
 </article>
 <article class="game-card" id="aii" data-url="aii/" data-title="AI出氣拳" data-share="AI 又在道歉？六種拳法、搞笑表情，999 拳送醫院！">
-<div class="game-meta"><span class="tag">GAME 002 / 999 PUNCHES</span><img class="lab-logo" src="qaf-logo-clear.png" alt="QAF"></div>
+<span class="play-count" data-play-count="aii">遊玩次數：尚未啟用</span><div class="game-meta"><span class="tag">GAME 002 / 999 PUNCHES</span><img class="lab-logo" src="qaf-logo-clear.png" alt="QAF"></div>
 <h2>AI出氣拳</h2><p class="description">我的唉哎又在那邊道歉了，讓拳套說話。<br>六種搞笑反應、九階受傷變化。打滿 999 拳，救護車送醫院。</p>
-<div class="game-screen"><iframe data-src="aii/index.html?v=home-button-31" title="AI出氣拳遊戲畫面" allow="autoplay; fullscreen; web-share" allowfullscreen></iframe></div>
+<div class="game-screen"><iframe data-src="aii/index.html?v=play-counts-20261010" title="AI出氣拳遊戲畫面" allow="autoplay; fullscreen; web-share" allowfullscreen></iframe></div>
 <p class="controls-note">電腦按 Q / W / E / I / O / P 出拳。<br>手機點下方隱藏六宮格，長按連發。</p>
 <div class="actions" aria-label="AII 遊戲分享與開啟"><a class="play" href="aii/">全螢幕玩 ↗</a><button data-action="facebook">分享到 Facebook</button><button data-action="share">分享遊戲 ↗</button><button data-action="copy">複製連結</button></div><p class="notice" role="status"></p>
 </article></section><footer>QAF / 遊戲空間</footer></main><script>
@@ -47,13 +47,14 @@ html.friend-embed{scroll-behavior:auto}
     cover:card.id==='aii'?'aii/share-face-5.png':'share-qaf.png'
   }));
   const main=document.querySelector('main');
+  const sortBar=document.querySelector('.game-sort');
   main.replaceChildren();
   const catalogue=document.createElement('section');
   catalogue.className='friend-catalogue';catalogue.setAttribute('aria-label','選擇遊戲');
   const player=document.createElement('section');
   player.className='friend-player';player.hidden=true;
   player.innerHTML='<div class="friend-player-bar"><h2></h2><button class="friend-back" type="button">退出遊戲</button></div><div class="friend-screen"></div>';
-  main.append(catalogue,player);
+  main.append(sortBar,catalogue,player);
   let lastHeight=0,activeButton=null,resizeQueued=false;
   function notify(type,extra={}){
     if(window.parent!==window)window.parent.postMessage({namespace:'qaf-game',type,...extra},location.origin);
@@ -66,13 +67,13 @@ html.friend-embed{scroll-behavior:auto}
   function queueSize(){if(!resizeQueued){resizeQueued=true;requestAnimationFrame(reportSize)}}
   function exitGame(){
     player.querySelector('.friend-screen').replaceChildren();
-    player.hidden=true;catalogue.hidden=false;
+    player.hidden=true;catalogue.hidden=false;sortBar.hidden=false;
     if(activeButton)activeButton.focus({preventScroll:true});
     queueSize();notify('scroll-top');
   }
   player.querySelector('.friend-back').addEventListener('click',exitGame);
   function openGame(game,button){
-    activeButton=button;catalogue.hidden=true;player.hidden=false;
+    activeButton=button;catalogue.hidden=true;player.hidden=false;sortBar.hidden=true;
     player.querySelector('h2').textContent=game.title;
     const frame=document.createElement('iframe');
     frame.title=game.title+'遊戲畫面';
@@ -97,11 +98,11 @@ html.friend-embed{scroll-behavior:auto}
     queueSize();notify('scroll-top');
   }
   games.forEach((game,index)=>{
-    const button=document.createElement('button');button.type='button';button.className='friend-card';
+    const button=document.createElement('button');button.dataset.gameId=game.id;button.type='button';button.className='friend-card';
     const cover=document.createElement('img');cover.src=game.cover;cover.alt='';cover.loading='lazy';
     const title=document.createElement('strong');title.textContent=game.title;
     const label=document.createElement('small');label.textContent='GAME '+String(index+1).padStart(3,'0')+' · 點擊開始';
-    button.append(cover,title,label);button.addEventListener('click',()=>openGame(game,button));catalogue.append(button);
+    const count=document.createElement('span');count.className='play-count';count.dataset.playCount=game.id;count.textContent='遊玩次數：尚未啟用';button.append(count,cover,title,label);button.addEventListener('click',()=>openGame(game,button));catalogue.append(button);
   });
   // Measure intrinsic main content, not viewport/scrollHeight: avoids iframe resize feedback.
   if('ResizeObserver' in window)new ResizeObserver(queueSize).observe(main);
@@ -111,7 +112,30 @@ html.friend-embed{scroll-behavior:auto}
 })();
 
 document.querySelectorAll('.game-card').forEach(card=>{const url=new URL(card.dataset.url,location.href).href,notice=card.querySelector('.notice');async function copy(){try{await navigator.clipboard.writeText(url);notice.textContent='已複製「'+card.dataset.title+'」連結，可以貼給朋友。'}catch{notice.textContent='遊戲連結：'+url}}card.querySelector('[data-action="facebook"]').onclick=()=>window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),'_blank','noopener,noreferrer');card.querySelector('[data-action="copy"]').onclick=copy;card.querySelector('[data-action="share"]').onclick=async()=>{try{if(navigator.share)await navigator.share({title:card.dataset.title+'｜QAF 的遊戲空間',text:card.dataset.share,url});else await copy()}catch(e){if(e.name!=='AbortError')notice.textContent='遊戲連結：'+url}}});
+</script><script>
+(function(){
+ const select=document.getElementById('game-sort');
+ const container=document.querySelector('.friend-catalogue')||document.querySelector('.games');
+ const items=Array.from(container.children);
+ // No first-publication evidence yet: preserve original order until verified metadata exists.
+ const dates={};
+ function sort(){
+   const ordered=items.map((el,i)=>({el,i,id:el.dataset.gameId||el.id}));
+   ordered.sort((a,b)=>{
+     const x=select.value==='plays'?window.QAFGameStats?.count(a.id):dates[a.id];
+     const y=select.value==='plays'?window.QAFGameStats?.count(b.id):dates[b.id];
+     if(x==null&&y==null)return a.i-b.i;
+     if(x==null)return 1;if(y==null)return -1;
+     return (y-x)||(a.i-b.i);
+   });
+   // Avoid relocating active iframes on the standalone page: CSS order preserves gameplay.
+   ordered.forEach((v,i)=>v.el.style.order=i);
+ }
+ select.addEventListener('change',sort);window.addEventListener('qaf-counts-updated',sort);
+ sort();
+})();
 </script></body></html>
+
 
 
 
