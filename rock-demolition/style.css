@@ -17,59 +17,52 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .load-progress{margin:14px 0 12px;text-align:left}.load-progress>div{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;font-size:12px;color:#62594e}.load-progress b{color:#945e2f;font-variant-numeric:tabular-nums}.load-progress progress{display:block;width:100%;height:8px;border:0;border-radius:8px;overflow:hidden;appearance:none;background:#33383d;color:#d6a56d}.load-progress progress::-webkit-progress-bar{background:#33383d;border-radius:8px}.load-progress progress::-webkit-progress-value{background:linear-gradient(90deg,#916548,#e7ba80);border-radius:8px}.load-progress progress::-moz-progress-bar{background:#d6a56d;border-radius:8px}
 
 
-/* Phone controls fit the visible browser area; the scene stays stable above its own HUD. */
-@media(max-width:760px) and (orientation:portrait){
- main{height:var(--visible-height,var(--height));min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:var(--stage-height,240px) minmax(0,1fr)}
- #stage{height:auto;min-height:0;display:grid;grid-template-rows:54px minmax(0,1fr) 32px}
- header{position:static;grid-row:1;padding:8px 12px;gap:8px;background:#172027;min-width:0}.brand{width:43px;height:31px}.job strong{font-size:13px}.job span{font-size:8px;letter-spacing:1px}nav{gap:5px}nav button,nav a{font-size:11px;min-height:32px;padding:6px 8px}
- #scene{grid-row:2;min-height:0}.vignette{top:54px;bottom:32px}.site-tag,#riff-caption{display:none!important}.stage-logo{width:35px;right:10px;bottom:39px}
- #damage-hud{grid-row:3;position:static;width:auto;border:0;border-radius:0;padding:4px 12px;background:#182028;backdrop-filter:none;display:flex;gap:12px;align-items:center}#damage-hud>div:first-child{gap:10px;min-width:110px}#damage-hud span{font-size:10px}#damage{font-size:18px}#damage small{font-size:10px}.meter{flex:1;height:4px;margin:0}
- #workbench{min-height:0;padding:9px 12px max(9px,env(safe-area-inset-bottom));overflow:hidden}.bench-title{margin-bottom:7px}.micro{display:none}h1{font-size:16px}.wallet{font-size:13px;padding:5px 8px}.board-shell{height:138px}.pedal,.empty-slot{height:105px}.bench-tools{margin:7px 0}.energy-panel{margin-bottom:7px}.rack-header{margin-bottom:6px}#rack{min-height:0;flex:1;overflow:auto;overscroll-behavior:contain}.rack-pedal{min-height:43px}.rack-pedal strong{font-size:10px}.rack-pedal small{font-size:9px}.action-bar{margin-top:8px;flex:0 0 auto}.action-bar button{min-height:44px;font-size:13px;padding:8px 12px}#notice{font-size:9px;min-height:12px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
- .compact-height .board-shell{height:111px;padding-top:17px;padding-bottom:7px}.compact-height .pedal,.compact-height .empty-slot{height:83px}.compact-height .pedal .model,.compact-height .pedal .knob-label{display:none}.compact-height .knobs{height:20px}.compact-height .led{margin:3px 0}.compact-height .footswitch{width:15px;height:15px}.compact-height .pedal .value{font-size:6px}.compact-height .bench-title{margin-bottom:5px}.compact-height #workbench{padding-top:6px}.compact-height .bench-tools{margin:5px 0}.compact-height .energy-panel{padding:4px 7px;margin-bottom:5px}.compact-height .energy-panel b{font-size:16px}.compact-height .rack-header{margin-bottom:4px}.compact-height #notice{display:none}
+/* The board remains visible; only the inventory scrolls. */
+.board-group{flex-shrink:0;min-width:0}.bench-scroll{flex:1;display:flex;min-height:52px}.bench-scroll #rack{flex:1;min-height:0}
+@media(pointer:coarse) and (max-width:1100px){
+ main{height:var(--visible-height,var(--height));min-height:0}
+ header{padding:7px 12px;gap:8px;background:#172027}.brand{width:38px;height:29px}.job strong{font-size:13px}.job span{font-size:8px;letter-spacing:1px}nav{gap:5px}nav button,nav a{min-height:32px;font-size:11px;padding:6px 8px}
+ .site-tag,#riff-caption,.micro,#notice{display:none!important}
+ #workbench{padding:6px 12px max(7px,env(safe-area-inset-bottom));min-height:0;overflow:hidden}.bench-title{margin:0 0 5px}h1{font-size:15px;margin:0}.wallet{font-size:12px;padding:4px 7px}
+ .board-group{position:relative;padding-bottom:0;background:#1b2027}
+ .board-group .board-shell{height:108px;padding:10px 10px 6px;border-radius:8px;margin:0}
+ #pedals{gap:12px}.board-group .pedal,.board-group .empty-slot{height:90px;min-height:0;padding:5px 3px 3px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;border-bottom-width:4px}
+ .board-group .pedal strong{font-size:13px;line-height:1.15;min-height:15px;margin:3px 0}
+ .board-group .pedal .knobs{display:flex;height:23px;gap:8px}.knob{width:22px;height:22px}.knob.small{width:16px;height:16px}.knob:after{left:9px;height:6px}.knob.small:after{left:6px}
+ .board-group .pedal .model,.board-group .pedal .knob-label{display:none}.board-group .pedal .led{display:block;width:5px;height:5px;margin:3px 0}.board-group .pedal .footswitch{display:block;width:18px;height:18px;flex-shrink:0}.board-group .pedal .value{display:block;font-size:7px;line-height:1;margin-top:3px}.board-jacks,.chain-label{display:none}
+ .board-group .empty-slot{justify-content:center;gap:5px}.empty-slot span{font-size:24px}.empty-slot small{font-size:11px}
+ .board-group .bench-tools{position:absolute;right:0;bottom:1px;margin:0;height:24px}.board-group .bench-tools button{min-height:24px;padding:3px 5px;font-size:10px}#chain-name{display:none}
+ .board-group .energy-panel{height:26px;min-height:26px;margin:0 76px 0 0;border:0;padding:2px 0;background:none;gap:10px;align-items:center;justify-content:flex-start}.energy-panel>div{flex-wrap:nowrap;gap:4px}.energy-panel span{font-size:9px;white-space:nowrap}.energy-panel b{font-size:16px;line-height:1}.energy-panel small{display:none}
+ .rack-header{margin:7px 0 6px;flex-shrink:0;font-size:12px}.rack-header span{font-size:12px}.rack-header small{font-size:10px}.rack-header>small{font-size:0}.rack-header>small:after{content:'上下滑動 · 點選裝上';font-size:10px}
+ .bench-scroll{display:block;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding-right:2px}
+ #workbench #rack{height:auto;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;overflow:visible;touch-action:pan-y;margin:0;padding-bottom:4px}
+ #rack .rack-pedal{min-height:60px;padding:8px;gap:8px;touch-action:pan-y}#rack .rack-pedal strong{font-size:13px;line-height:1.2}#rack .rack-pedal small{font-size:11px;line-height:1.2;margin-top:5px}.mini-pedal{width:19px;height:31px;flex-shrink:0}
+ .action-bar{margin-top:7px;flex-shrink:0}.action-bar button{min-height:44px;padding:8px 12px;font-size:13px}
+ .menu-card,.result-card{max-height:calc(var(--visible-height,var(--height)) - 24px);overflow:auto}
 }
-/* Wide touch screens reserve most width for the animation and keep controls inside browser chrome. */
-@media(orientation:landscape) and (max-height:550px) and (pointer:coarse){
- main{height:var(--visible-height,var(--height));grid-template-columns:minmax(0,1fr) clamp(260px,38vw,350px)}
- #stage{display:grid;grid-template-rows:50px minmax(0,1fr) 28px}
- header{position:static;grid-row:1;padding:7px 10px;background:#172027}.brand{width:36px;height:27px}.job strong{font-size:12px}nav button,nav a{min-height:32px}
- #scene{grid-row:2;min-height:0}.vignette{top:50px;bottom:28px}.site-tag,#riff-caption{display:none!important}.stage-logo{bottom:34px;width:32px}
+@media(pointer:coarse) and (max-width:1100px) and (orientation:portrait){
+ main{display:grid;max-width:500px;grid-template-columns:minmax(0,1fr);grid-template-rows:var(--stage-height,434px) minmax(0,1fr)}
+ #stage{height:auto;min-height:0;display:grid;grid-template-rows:48px 154px minmax(0,1fr) 28px}
+ header{position:static;grid-row:1}.board-group{grid-row:2;padding:10px 12px}.board-group .board-shell{height:108px}
+ #scene{grid-row:3;min-height:0}.vignette{top:202px;bottom:28px}.stage-logo{width:35px;right:10px;bottom:35px}
+ #damage-hud{position:static;grid-row:4;width:auto;border:0;border-radius:0;padding:3px 12px;background:#182028;display:flex;gap:12px;align-items:center}#damage-hud>div:first-child{gap:10px;min-width:105px}#damage-hud span{font-size:10px}#damage{font-size:17px}#damage small{font-size:10px}.meter{flex:1;height:4px;margin:0}
+ #workbench .bench-title{display:none}.rack-header{margin-top:0}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){
+ main{display:grid;grid-template-columns:minmax(0,1fr) clamp(270px,39vw,360px)}
+ #stage{height:100%;display:grid;grid-template-rows:48px minmax(0,1fr) 28px;min-height:0}
+ header{position:static;grid-row:1;padding:6px 10px}.job strong{font-size:12px}#scene{grid-row:2;min-height:0}.vignette{top:48px;bottom:28px}.stage-logo{bottom:34px;width:32px}
  #damage-hud{position:static;grid-row:3;width:auto;padding:3px 10px;border:0;border-radius:0;background:#182028;display:flex;gap:10px;align-items:center}#damage-hud>div:first-child{min-width:95px;gap:8px}#damage-hud span{font-size:9px}#damage{font-size:16px}#damage small{font-size:9px}.meter{flex:1;margin:0}
- #workbench{padding:6px 10px max(7px,env(safe-area-inset-bottom));min-height:0}.micro,#notice{display:none}.bench-title{margin-bottom:4px}h1{font-size:14px}.wallet{padding:4px 6px;font-size:12px}
- .board-shell{height:101px;padding:16px 10px 6px}.pedal,.empty-slot{height:76px}.pedal strong{font-size:10px}.knobs{height:18px}.knob{width:18px;height:18px}.knob.small{width:13px;height:13px}.led{margin:3px 0}.footswitch{height:13px;width:13px}.pedal .value{font-size:6px}
- .bench-tools{margin:4px 0}.energy-panel{padding:3px 6px;margin-bottom:4px;gap:5px}.energy-panel b{font-size:15px}.energy-panel small{display:none}.energy-panel span{font-size:9px}.rack-header{margin-bottom:4px}.rack-header span{font-size:11px}.rack-header small{font-size:8px}
- #rack{min-height:44px;flex:1;overflow:auto;overscroll-behavior:contain}.rack-pedal{min-height:44px}.rack-pedal strong{font-size:10px}.rack-pedal small{font-size:9px}.action-bar{margin-top:6px;flex-shrink:0}.action-bar button{min-height:44px;padding:7px 9px;font-size:12px}
- .short-landscape .board-shell{height:83px;padding-top:14px}.short-landscape .pedal,.short-landscape .empty-slot{height:60px}.short-landscape .pedal .value,.short-landscape .pedal .led,.short-landscape .pedal .footswitch{display:none}.short-landscape .knobs{height:17px}.short-landscape .empty-slot{gap:1px}.short-landscape .empty-slot span{font-size:20px}
- .menu-card,.result-card{max-height:calc(var(--visible-height,var(--height)) - 24px)}
+ #workbench{padding:5px 10px max(5px,env(safe-area-inset-bottom))}.bench-title{margin-bottom:4px}h1{font-size:13px;line-height:1.2}.wallet{font-size:11px;line-height:1.2;padding:2px 5px}
+ .board-group .board-shell{height:98px;padding:7px 8px 5px}.board-group .pedal,.board-group .empty-slot{height:82px;padding-top:3px}.board-group .pedal strong{font-size:12px}.board-group .pedal .knobs{height:21px}.board-group .pedal .led{margin:2px 0}.board-group .pedal .footswitch{height:16px;width:16px}.board-group .pedal .value{font-size:6px}
+ .energy-panel span{font-size:8px}.energy-panel b{font-size:15px}.board-group .energy-panel{gap:7px;height:24px;min-height:24px}.rack-header{margin:4px 0 5px;line-height:1.2}.rack-header span{font-size:11px}.rack-header>small:after{font-size:9px}
+ #rack .rack-pedal strong{font-size:12px}#rack .rack-pedal{padding:7px;min-height:58px}.action-bar{margin-top:5px}.action-bar button{min-height:44px;padding:7px 9px;font-size:12px}
 }
-@media(orientation:landscape) and (max-height:550px) and (pointer:coarse){
- #chain-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bench-tools button{flex-shrink:0}
- .short-landscape .board-shell{height:70px;padding-top:13px;padding-bottom:4px}.short-landscape .pedal,.short-landscape .empty-slot{height:50px}.short-landscape .bench-tools{margin:3px 0}.short-landscape .energy-panel{padding:2px 5px}.short-landscape .energy-panel>div{gap:3px;flex-wrap:nowrap}.short-landscape .energy-panel b{font-size:14px}.short-landscape .energy-panel span{font-size:8px}.short-landscape .rack-header{margin-bottom:3px}.short-landscape #workbench{padding-top:4px;padding-bottom:max(7px,env(safe-area-inset-bottom))}
-}
-/* On phones, the installed board is compact; the permanent rack gets large touch rows. */
-@media(pointer:coarse) and (max-width:1100px){
- #workbench .board-shell{height:56px;padding:4px 8px;border-radius:7px}
- #workbench .pedal,#workbench .empty-slot{height:44px;min-height:44px;padding:4px;display:flex;align-items:center;justify-content:center;border-bottom-width:3px}
- #workbench .pedal strong{font-size:12px;line-height:1.2}
- #workbench .pedal .knobs,#workbench .pedal .knob-label,#workbench .pedal .model,#workbench .pedal .led,#workbench .pedal .footswitch,#workbench .pedal .value,.board-jacks,.chain-label{display:none}
- #workbench .empty-slot span{font-size:19px}#workbench .empty-slot small{font-size:10px}.empty-slot{gap:4px;flex-direction:row}
- #rack{grid-template-columns:repeat(2,minmax(0,1fr));min-height:100px;gap:8px;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
- #rack .rack-pedal{min-height:60px;padding:9px 8px;gap:8px;touch-action:pan-y}
- #rack .rack-pedal strong{font-size:13px;line-height:1.2}#rack .rack-pedal small{font-size:11px;line-height:1.2;margin-top:5px}.mini-pedal{width:20px;height:32px;flex-shrink:0}
- .rack-header small{font-size:10px}.rack-header>small{font-size:0}.rack-header>small:after{content:'上下滑動 · 點選裝上';font-size:10px}
-}
+@media(pointer:coarse) and (max-width:1100px) and (orientation:portrait){#workbench .bench-title{display:flex;justify-content:flex-end;height:18px;margin:0 0 4px}#workbench h1{display:none}.wallet{padding:1px 6px}}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){#rack .rack-pedal{min-height:60px}}
 @media(pointer:coarse) and (orientation:landscape) and (max-height:550px){
- #workbench .board-shell{height:50px;padding-top:2px;padding-bottom:2px}#rack{min-height:92px}#rack .rack-pedal{min-height:60px}#rack .rack-pedal strong{font-size:12px}
+ .board-group .board-shell{height:90px;padding-top:6px;padding-bottom:4px}.board-group .pedal,.board-group .empty-slot{height:74px;padding-top:2px}.board-group .pedal strong{margin:2px 0;min-height:13px}.board-group .pedal .knobs{height:20px}.board-group .pedal .led{margin:1px 0}.board-group .pedal .value{margin-top:2px}
+ .bench-title{margin-bottom:2px}.wallet{padding-top:1px;padding-bottom:1px}.rack-header{margin-top:2px;margin-bottom:2px}
 }
-@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){
- #workbench{padding-top:3px;padding-bottom:max(5px,env(safe-area-inset-bottom))}.bench-title{margin-bottom:2px}h1{font-size:13px;line-height:1.2}.wallet{padding:2px 4px;font-size:11px;line-height:1.2}
- #workbench .board-shell{height:48px;padding:0 8px}.bench-tools{margin:2px 0;min-height:22px}.bench-tools button{padding:2px 5px;font-size:10px;line-height:1.2}.energy-panel{margin-bottom:2px;padding:2px 5px;line-height:1.2}.energy-panel b{font-size:14px;line-height:1.2}.energy-panel>div{flex-wrap:nowrap;gap:3px}.energy-panel span{font-size:8px}.rack-header{margin-bottom:3px;line-height:1.2}.rack-header span{font-size:11px}.rack-header small{font-size:9px}.rack-header>small:after{font-size:9px}
- #rack{min-height:92px}.action-bar{margin-top:4px}
-}
-.bench-scroll{display:flex;flex-direction:column;min-height:0;flex:1}.bench-scroll>*{flex-shrink:0}
-@media(pointer:coarse) and (max-width:1100px){
- .bench-scroll{display:block;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding-bottom:4px}
- #workbench #rack{height:auto;min-height:0;display:grid;overflow:visible;flex:none;margin-bottom:8px;touch-action:pan-y}
- #workbench .bench-title{margin-bottom:5px}#workbench .rack-header{margin-bottom:7px}#workbench .action-bar{flex-shrink:0;margin-top:6px}
- #workbench .board-shell{height:56px}#workbench .bench-tools{margin:5px 0}#workbench .energy-panel{margin-bottom:6px}
-}
-@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){#workbench .board-shell{height:50px}}
+@media(pointer:coarse) and (max-width:1100px){.board-group .pedal>*{flex-shrink:0}.board-group .pedal strong{margin:2px 0;min-height:14px}.board-group .pedal .knobs{height:22px}.board-group .pedal .led{margin:1px 0}.board-group .pedal .value{margin-top:2px}}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){.board-group .board-shell{height:94px}.board-group .pedal,.board-group .empty-slot{height:78px}.board-group .pedal .knobs{height:20px}}
