@@ -1,0 +1,52 @@
+腳踝終結者｜提示詞整理｜2026-10-10
+整理依據：本次對話最終確認與 ankle-8 正式版本。這是可延續開發的提示詞，不是逐字聊天紀錄。搭配「QAF 遊戲共同原則」使用，最新明確更正優先。
+
+一、可直接使用的總提示詞
+請製作並維護「腳踝終結者」，以真正 3D 的可愛重金屬練團室呈現。玩家是第一人稱吉他手，面前的鼓手跟著玩家每次 Pick 點按踩大鼓。玩家愈快，鼓手愈緊張；第一關嚴格超過 150 BPM 才開始累積腳踝負荷，持續約五秒達到極限，播放搞笑卡通扭腳與繞頭星星、慶祝效果，再顯示本輪最高 BPM、完成時間和出手次數。沿用目前 qaf-game/ankle-breaker 與共同原則。
+
+二、場景與人物
+真正 3D 練團室、可愛鼓手、完整鼓組與第一人稱吉他及雙手。人物臉部與頭髮圓滑完整，不用方塊假髮；動作對應實際演奏。
+鼓手對話框放在左側，不遮住鼓手臉、標題、速度、負荷或主要操作。背景牆「ANKLE / RIFF CLUB」大字已移除，不能再與上方遊戲標題重疊。
+主選單及結束畫面有回首頁，遊玩中有退出；去背 QAF Logo 放在主選單、遊玩右下角與結束畫面。
+
+三、Pick 操作
+Pick 橫轉 90 度；判定區橫向拉滿遊戲畫面寬度，左右各半。按左側時 Pick 尖端朝左，按右側時朝右；不是不論按哪邊都只照次數交替。
+支援兩根手指輪流點按，兩指都接觸時也不漏掉新接觸。每按一下立刻彈一下並踩一下大鼓，長按不自動連發。電腦也可用空白鍵／Enter 點按，鍵盤不處理長按 repeat。
+禁止選字、長按選單與圖片拖曳。遊玩期間防止連按雙擊、按壓或多指手勢造成瀏覽器放大；選單仍可正常滑動，音效及退出按鈕正常可用。
+
+四、真實樂器音效與音色選擇
+電吉他使用真實錄音的 low E distortion E–B–E 強力和弦，必須有實際手掌悶音演奏，不是只有把開放延音縮短。
+曾提供三個聊天試聽：A 緊實短促、B 厚重偏暗、C 清脆明亮；使用者最終選 C。左右撥弦都用 C 音色、不同撥弦順序。試聽是在聊天裡選，不需要在遊戲加入三音色選單。
+C 音檔長約 0.18 秒，以 SpeedY 的真實 E2、E3 手掌悶音錄音疊成 E–B–E，EQ 與淡出保留清脆感；來源為 Freesound 12037、12035，CC0。鼓組使用 enoe Pearl Master Studio Pack 1，CC BY 3.0，保留來源及處理說明於 credits.html。
+鼓是實錄大鼓、小鼓、閉合 Hi-hat、Crash、高中低 Tom；不是用合成音代替指定的樂器音色。音檔先載好、解碼，第一次操作解鎖 Web Audio。
+
+五、基本節奏、速度與進階鼓法
+每一次點按都有大鼓。八下為一循環，第 2 和第 6 下同時加 Hi-hat，第 4 和第 8 下同時加小鼓，第八下之後回第一下持續循環。
+四連音，每拍四次 Pick；150 BPM 對應每秒 10 次點按。不要把每次點按直接當成一個完整拍子。
+速度到 120 BPM 起加入 Crash，並在每四個八下循環的最後四下加一組過門，以高 Tom、中 Tom、低 Tom、小鼓收尾。
+速度到 150 BPM 起，小鼓與雙踏逐漸變成連打，力度／密度漸進增加，不突然全開。這個鼓法門檻包含 150，但腳踝負荷只在嚴格超過 150 BPM 才累積，兩項判定不可混淆。
+停手後速度歸零、負荷恢復，鼓不會自行無限播放；離開或切背景停止正在播放與排程中的音效。
+
+六、過關、最高速度與紀錄
+持續超過 150 BPM 約五秒累積到極限後過關；扭腳是誇張卡通效果，不用寫實傷害畫面。鼓手喊停、腳踝扭轉、星星繞頭，配簡短成功音樂和彩片。
+過關畫面用大字顯示「你這一輪的最高速度」，數值為本輪最高 BPM，顯示一位小數；同時列出完成時間與出手次數。不是只顯示停止後的零速度，也不是拿裝置歷史最高混成本輪最高。
+可重玩或回首頁。既有裝置 localStorage 保存最佳速度與最快完成時間；主選單顯示歷史紀錄。雲端遊玩總次數與個人紀錄分開，成功開始／重玩才加一次。
+
+七、已確認的修正優先
+第一關只有「超過 150 BPM」才累積，等於或低於不累積。四連音不是八分音符或每下當一拍。
+音色最終選 C 清脆明亮，不回到開放強力和弦、A 或 B。Pick 朝向依使用者按的左右區域，不只依奇偶次數。
+對話框最終放左側，取代先前只往上移的嘗試。移除會疊上標題的背景大字。防縮放只在遊玩期間，不能破壞主選單滑動。
+
+八、正式連結與截圖
+遊戲正式網址：https://qafstudio2.github.io/qaf-game/ankle-breaker/?v=ankle-8
+共用遊戲首頁：https://qafstudio2.github.io/qaf-game/
+音樂工作站遊戲專區：https://qafstudio2.github.io/qaf-music-friend-preview/#games
+音效來源：https://qafstudio2.github.io/qaf-game/ankle-breaker/credits.html
+此遊戲備份資料夾：https://drive.google.com/drive/folders/1LCSix03taMTgiLYGu3bbvviiu8MJJI8P
+腳踝終結者-主選單：https://drive.google.com/file/d/1UPk_7VRN1b_8oA5l7qxZXCIQRmIqQsaR/view?usp=drivesdk
+腳踝終結者-遊玩畫面：https://drive.google.com/file/d/1AQTo3t_OE8oAYORHzRSh_CKouBMVVg7j/view?usp=drivesdk
+腳踝終結者-過關最高速度：https://drive.google.com/file/d/1AYj2SUMOISbc9UlWr2mPe7QAB5EcUXVS/view?usp=drivesdk
+截圖保留原帳戶存取權限。
+
+共同原則文件：https://docs.google.com/document/d/1mQh7edXYeg2lKA9hYXu5niu66TMTJqSmcuyolDFP1Zc/edit?usp=drivesdk
+四款提示詞總包：https://docs.google.com/document/d/1pNRfOirQ6jk4PQpjwCMTVTIz4P2Z2nRm37hbkZiSOzs/edit?usp=drivesdk
