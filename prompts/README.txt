@@ -1,4 +1,4 @@
-QAF 四款遊戲提示詞備份包｜2026-10-10
+QAF 遊戲提示詞備份｜2026-10-10
 先讀共同原則，再讀要修改的遊戲專屬提示詞；最新明確更正優先。
 以後說「其他的依照共同原則處理」即沿用這套規則。
 四款：HDMI插入傳說、AI出氣拳、修理上弦枕、腳踝終結者。
@@ -26,3 +26,11 @@ AI出氣拳-主選單.png：https://drive.google.com/file/d/1G80FnnElY_8gt8ebmxy
 
 腳踝終結者截圖為 ankle-8 正式版；前面三款沿用原備份截圖，未重新宣稱為本次版本。
 本包是整理後的延續開發提示詞，不是逐字聊天紀錄。
+
+搖滾拆除大隊｜第一關試玩
+提示詞：https://docs.google.com/document/d/1KWmKs9PexzcWd4xJkAeUU_lKSxIAvTpH8J_xKTFAWJg/edit?usp=drivesdk
+資料夾：https://drive.google.com/drive/folders/19COh_3xREvmjzkdsVRNvqf_C9i8RNiAj
+搖滾拆除大隊-主選單.png：https://drive.google.com/file/d/1VBzpVe-6oPttABUljmpePK2iG6oVTW6o/view?usp=drivesdk
+搖滾拆除大隊-組盤.png：https://drive.google.com/file/d/1mW4xZifTf8aKZLuWg5PQaRUJeXFDqhKI/view?usp=drivesdk
+搖滾拆除大隊-拆除演出.png：https://drive.google.com/file/d/1zwAfQPt7fZv7fLVlJaZFoZP_mvNAM6ZP/view?usp=drivesdk
+搖滾拆除大隊-結算.png：https://drive.google.com/file/d/1dzH14MVOIWoLDDdbkf5ca_1nTBbDif4n/view?usp=drivesdk

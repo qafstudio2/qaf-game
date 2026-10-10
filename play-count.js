@@ -1,7 +1,7 @@
 /* Shared cloud totals. Reading menus never records a play. */
 (() => {
   'use strict';
-  const games = new Set(['hdmi', 'aii', 'guitar-nut', 'ankle-breaker']);
+  const games = new Set(['hdmi', 'aii', 'guitar-nut', 'ankle-breaker', 'rock-demolition']);
   const totals = new Map(), pending = new Map();
   const token = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const urn = game => `qafstudio2.github.io/qaf-game/plays/${game}`;
