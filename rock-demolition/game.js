@@ -1,6 +1,6 @@
-import {T,build} from './world.js?v=rock-20';
-import {Sound,STYLES} from './audio.js?v=rock-20';
-import {CATALOG as catalog,LEVELS,calculate} from './rules.js?v=rock-20';
+import {T,build} from './world.js?v=rock-21';
+import {Sound,STYLES} from './audio.js?v=rock-21';
+import {CATALOG as catalog,LEVELS,calculate} from './rules.js?v=rock-21';
 await Promise.race([document.fonts.load('700 210px UnifrakturCook').catch(()=>{}),new Promise(resolve=>setTimeout(resolve,2200))]);
 const $=id=>document.getElementById(id),world=build(),sound=new Sound(),renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;$('scene').append(renderer.domElement);const camera=new T.PerspectiveCamera(44,1,.1,65),target=new T.Vector3(-.15,1.25,.25),cameraBase=new T.Vector3();
 let saved={money:0,owned:catalog.filter(p=>p.tier===0).map(p=>p.id),best:0};try{const prior=JSON.parse(localStorage.getItem('qaf-rock-demolition-v2')||localStorage.getItem('qaf-rock-demolition-v1'));if(prior&&Number.isFinite(prior.money)&&prior.money>=0)saved={...saved,money:prior.money,owned:[...new Set([...saved.owned,...(prior.owned||[]).filter(id=>catalog.some(p=>p.id===id))])],best:prior.best||0};}catch{}
