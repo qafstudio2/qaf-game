@@ -1,5 +1,5 @@
-import {T,build} from './models.js?v=ankle-5';
-import {Sound} from './audio.js?v=ankle-5';
+import {T,build} from './models.js?v=ankle-6';
+import {Sound} from './audio.js?v=ankle-6';
 const $=id=>document.getElementById(id),sound=new Sound(),rig=build();
 const renderer=new T.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;$('scene').append(renderer.domElement);
 const camera=new T.PerspectiveCamera(43,1,.1,40),state={mode:'menu',hits:0,beat:-1,taps:[],speed:0,bpm:0,stroke:-1,roll:0,peak:0,stress:0,start:0,last:0,ended:0,elapsed:0};let previous=performance.now(),punchAt=-100,hhAt=-100,snareAt=-100,kickAt=-100,crashAt=-100,tomAt=-100,disposed=false;const beatEls=[...document.querySelectorAll('[data-beat]')],particles=[];
