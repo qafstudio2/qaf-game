@@ -1,7 +1,8 @@
-import {T,build} from './world.js?v=rock-11';
-import {Sound,STYLES} from './audio.js?v=rock-11';
-import {CATALOG as catalog,LEVELS,calculate} from './rules.js?v=rock-11';
-const $=id=>document.getElementById(id),world=build(),sound=new Sound(),renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;$('scene').append(renderer.domElement);const camera=new T.PerspectiveCamera(44,1,.1,65),target=new T.Vector3(-.15,1.25,.25),cameraBase=new T.Vector3();
+import {T,build} from './world.js?v=rock-13';
+import {Sound,STYLES} from './audio.js?v=rock-13';
+import {CATALOG as catalog,LEVELS,calculate} from './rules.js?v=rock-13';
+await Promise.race([document.fonts.load('700 210px UnifrakturCook').catch(()=>{}),new Promise(resolve=>setTimeout(resolve,2200))]);
+const $=id=>document.getElementById(id),world=build(),sound=new Sound(),renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;$('scene').append(renderer.domElement);const camera=new T.PerspectiveCamera(44,1,.1,65),target=new T.Vector3(-.15,1.25,.25),cameraBase=new T.Vector3();
 let saved={money:0,owned:catalog.filter(p=>p.tier===0).map(p=>p.id),best:0};try{const prior=JSON.parse(localStorage.getItem('qaf-rock-demolition-v2')||localStorage.getItem('qaf-rock-demolition-v1'));if(prior&&Number.isFinite(prior.money)&&prior.money>=0)saved={...saved,money:prior.money,owned:[...new Set([...saved.owned,...(prior.owned||[]).filter(id=>catalog.some(p=>p.id===id))])],best:prior.best||0};}catch{}
 const state={mode:'menu',stage:0,damage:0,money:saved.money,owned:new Set(saved.owned),pedals:[null,null,null],variation:0,notes:0,soloNotes:0,totalEarned:0,earnings:0,editing:0,selectedSlot:0,pulse:0,shake:0,tremor:0,started:false,exploded:false,blast:null,energy:0};let last=performance.now(),pendingResult=0,drag=null,hasDragged=false,showStart=0;
 function persist(){saved={money:state.money,owned:[...state.owned],best:Math.max(saved.best,state.totalEarned)};try{localStorage.setItem('qaf-rock-demolition-v2',JSON.stringify(saved));}catch{}}

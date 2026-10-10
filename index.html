@@ -48,12 +48,12 @@ html.friend-embed{scroll-behavior:auto}
 <div class="game-screen"><iframe data-src="ankle-breaker/index.html?v=ankle-9" title="腳踝終結者 3D 練團室" allow="autoplay; fullscreen; web-share" allowfullscreen></iframe></div>
 <p class="controls-note">手機點按 Pick，電腦按空白鍵。</p>
 <div class="actions" aria-label="腳踝終結者分享與開啟"><a class="play" href="ankle-breaker/">全螢幕玩 ↗</a><button data-action="facebook">分享到 Facebook</button><button data-action="share">分享遊戲 ↗</button><button data-action="copy">複製連結</button></div><p class="notice" role="status"></p>
-</article><article class="game-card" id="rock-demolition" data-url="rock-demolition/?v=rock-11" data-title="金屬爆破大王" data-cover="rock-demolition/cover.jpg?v=rock-11" data-share="組一盤效果器，用重金屬 Riff 把房子放倒！">
+</article><article class="game-card" id="rock-demolition" data-url="rock-demolition/?v=rock-13" data-title="金屬爆破大王" data-cover="rock-demolition/cover.jpg?v=rock-13" data-share="組一盤效果器，用重金屬 Riff 把房子放倒！">
 <div class="game-meta"><span class="tag">GAME 005 / ROCK DEMOLITION</span><img class="lab-logo" src="qaf-logo-clear.png" alt="QAF"></div>
 <h2>金屬爆破大王</h2><p class="description">空盤自由組效果器，能量決定火勢。<br>三關 Riff 與速彈越來越狠，炸到整條街和吉他手飛走。</p><p class="play-count" data-play-count="rock-demolition">遊玩次數載入中…</p>
-<div class="game-screen"><iframe data-src="rock-demolition/index.html?v=rock-11" title="金屬爆破大王 3D 組盤與拆除現場" allow="autoplay; fullscreen; web-share" allowfullscreen></iframe></div>
+<div class="game-screen"><iframe data-src="rock-demolition/index.html?v=rock-13" title="金屬爆破大王 3D 組盤與拆除現場" allow="autoplay; fullscreen; web-share" allowfullscreen></iframe></div>
 <p class="controls-note">點效果器轉旋鈕、拖曳換順序。<br>第一關試玩：午夜唱片行。</p>
-<div class="actions" aria-label="金屬爆破大王分享與開啟"><a class="play" href="rock-demolition/?v=rock-11">全螢幕玩 ↗</a><button data-action="facebook">分享到 Facebook</button><button data-action="share">分享遊戲 ↗</button><button data-action="copy">複製連結</button></div><p class="notice" role="status"></p>
+<div class="actions" aria-label="金屬爆破大王分享與開啟"><a class="play" href="rock-demolition/?v=rock-13">全螢幕玩 ↗</a><button data-action="facebook">分享到 Facebook</button><button data-action="share">分享遊戲 ↗</button><button data-action="copy">複製連結</button></div><p class="notice" role="status"></p>
 </article></section><footer>QAF / 遊戲空間</footer></main><script>
 
 (function(){
@@ -130,5 +130,5 @@ html.friend-embed{scroll-behavior:auto}
 })();
 
 document.querySelectorAll('.game-card').forEach(card=>{const url=new URL(card.dataset.url,location.href).href,notice=card.querySelector('.notice');async function copy(){try{await navigator.clipboard.writeText(url);notice.textContent='已複製「'+card.dataset.title+'」連結，可以貼給朋友。'}catch{notice.textContent='遊戲連結：'+url}}card.querySelector('[data-action="facebook"]').onclick=()=>window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),'_blank','noopener,noreferrer');card.querySelector('[data-action="copy"]').onclick=copy;card.querySelector('[data-action="share"]').onclick=async()=>{try{if(navigator.share)await navigator.share({title:card.dataset.title+'｜QAF 的遊戲空間',text:card.dataset.share,url});else await copy()}catch(e){if(e.name!=='AbortError')notice.textContent='遊戲連結：'+url}}});
-</script><script src="play-count.js?v=rock-11"></script></body></html>
+</script><script src="play-count.js?v=rock-13"></script></body></html>
 
