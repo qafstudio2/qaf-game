@@ -10,3 +10,6 @@
 
 /* Dialogue stays in the left margin, clear of the header and drummer face. */
 #speech{top:126px;left:12px;right:auto;width:clamp(96px,28%,140px);padding:8px 10px;font-size:11px;line-height:1.6;text-align:left}@media(max-height:650px){#speech{top:126px;padding:7px 9px;font-size:11px}}
+
+/* Stop native double-tap/pinch zoom without blocking menu scrolling. */
+main.is-playing{touch-action:none}.overlay article{touch-action:pan-y}
