@@ -49,9 +49,9 @@ function windowFrame(stage,x,y,z,w,h){const pane=part(stage,w,h,.024,glass,x,y,z
 const signs=[];
 function businessSign(stage,title,subtitle,w,h,x,y,z){const c=document.createElement('canvas');c.width=1536;c.height=384;const g=c.getContext('2d'),bg=stage===1?'#253a40':'#35272e',ink=stage===1?'#ffc272':'#e4c895';g.fillStyle=bg;g.fillRect(0,0,1536,384);g.fillStyle=ink;g.fillRect(0,0,18,384);g.strokeStyle=ink;g.lineWidth=4;g.strokeRect(28,28,1480,328);g.fillStyle=ink;for(let i=0;i<5;i++)g.fillRect(66+i*20,185-(i%3)*31,11,55+(i%3)*31);g.font='900 106px "Noto Sans TC",Arial';g.textAlign='center';g.fillText(title,790,190,1110);g.font='500 31px Arial';g.fillText(subtitle,790,264,1110);g.font='900 61px Arial';g.fillText('0'+(stage+1),1410,138);for(let i=0;i<4;i++){g.beginPath();g.arc(i%2?1484:52,i<2?48:336,7,0,Math.PI*2);g.fill();}const map=new T.CanvasTexture(c);map.colorSpace=T.SRGBColorSpace;const group=new T.Group();group.position.set(x,y,z);architecture[stage].add(group);box(group,w+.14,h+.14,.17,steel,0,0,-.055);mesh(group,new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map,roughness:.4,emissive:'#b8874e',emissiveIntensity:.08}),0,0,.04);const item=breakable(group,'sign',101);item.userData.exactStage=stage;item.userData.title=title;signs.push(item);return item;}
 floorTiles(1,6.6,4.2,.24,-.65);
-for(const x of[-3.3,3.3])for(let z=0;z<7;z++)for(let row=0;row<4;row++)part(1,.15,.72,.57,wallSteel,x,.66+row*.74,-2.45+z*.6);
-for(let x=0;x<10;x++)for(let row=0;row<4;row++)part(1,.64,.72,.14,wallSteel,-2.95+x*.66,.66+row*.74,-2.75);
-const warehouseOpenings=[{x:0,y:1.28,w:2.5,h:1.9},{x:-2.28,y:1.36,w:1.12,h:1.16},{x:2.28,y:1.36,w:1.12,h:1.16}];
+for(const x of[-3.3,3.3])for(let z=0;z<7;z++)for(let row=0;row<5;row++)part(1,.15,.72,.57,wallSteel,x,.66+row*.74,-2.45+z*.6);
+for(let x=0;x<10;x++)for(let row=0;row<5;row++)part(1,.64,.72,.14,wallSteel,-2.95+x*.66,.66+row*.74,-2.75);
+for(const x of[-3.3,3.3])for(let i=0;i<7;i++){const z=-2.45+i*.6,top=4.87-.23*Math.abs(z+.65),h=top-3.98;part(1,.15,h,.57,wallSteel,x,3.98+h/2,z,'wall',101);}for(let i=0;i<10;i++)part(1,.64,.39,.14,wallSteel,-2.95+i*.66,4.18,-2.75,'wall',101);const warehouseOpenings=[{x:0,y:1.28,w:2.5,h:1.9},{x:-2.28,y:1.36,w:1.12,h:1.16},{x:2.28,y:1.36,w:1.12,h:1.16}];
 facade(1,6.6,.30,1.26,warehouseOpenings,wallSteel);facade(1,6.6,2.40,1.26,[{x:0,y:3.61,w:2.88,h:1.00}],wallSteel,1.93);
 for(const x of[-2.28,2.28])windowFrame(1,x,1.36,1.26,1.12,1.16);windowFrame(1,0,3.61,1.26,2.88,1.00);
 for(const x of[-1.3,1.3])part(1,.14,2.04,.20,copper,x,1.31,1.39,'entry-frame',101);part(1,2.74,.13,.20,copper,0,2.32,1.39,'entry-frame',101);
@@ -123,5 +123,6 @@ function explode(ratio){const strength=Math.max(.7,Math.min(2.4,ratio)),levelPow
 for(const p of pieces){p.userData.home=p.position.clone();p.userData.rotation=p.rotation.clone();}
 prepareStage(0);
 return {scene,musician,house,pieces,occupants,customers,interiorLights,lightFixtures,signs,fissures,get powerFailed(){return powerFailed;},damage,reset,update,burst,prepareStage,ignite,explode,note,get soloPosition(){return soloPosition;},get level(){return level;},get fire(){return firePower;},get flames(){return flames;},get quake(){return quake;},get launched(){return launchAge>=0;}};}
+
 
 
