@@ -66,3 +66,21 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 }
 @media(pointer:coarse) and (max-width:1100px){.board-group .pedal>*{flex-shrink:0}.board-group .pedal strong{margin:2px 0;min-height:14px}.board-group .pedal .knobs{height:22px}.board-group .pedal .led{margin:1px 0}.board-group .pedal .value{margin-top:2px}}
 @media(pointer:coarse) and (orientation:landscape) and (max-height:550px){.board-group .board-shell{height:94px}.board-group .pedal,.board-group .empty-slot{height:78px}.board-group .pedal .knobs{height:20px}}
+/* Compact information bars keep the useful values together. */
+.board-group{display:flex;flex-direction:column}.board-meta{display:contents}.board-meta .bench-title{order:-1}.board-group .board-shell{order:0}.board-meta .bench-tools{order:1}.board-meta .energy-panel{order:2}.compact-label{display:none}
+@media(pointer:coarse) and (max-width:1100px){
+ .board-group{display:block}.board-meta{display:flex;align-items:center;gap:7px;height:28px;white-space:nowrap;min-width:0}
+ .board-meta .bench-title,.board-meta .bench-title>div{display:contents}.board-meta h1{display:block!important;order:1;font-size:12px;margin:0;line-height:1;flex-shrink:0}.board-meta .energy-panel{order:2;margin:0;min-height:0;height:auto;padding:0;gap:9px;flex:1;justify-content:flex-start}.board-meta .energy-panel span{font-size:0}.board-meta .energy-panel span:after{font-size:9px}.board-meta .energy-panel>div:first-child span:after{content:'能量'}.board-meta .energy-panel>div:last-child span:after{content:'防禦'}.board-meta .energy-panel b{font-size:16px}.board-meta .energy-panel>div{gap:4px}.board-meta .wallet{order:3;font-size:12px;line-height:1;padding:2px 4px;flex-shrink:0}.board-meta .bench-tools{order:4;position:static;right:auto;bottom:auto;margin:0;height:26px;flex-shrink:0}.board-meta .bench-tools button{min-height:26px;padding:3px 5px;font-size:10px}
+ .rack-header{height:24px;min-height:24px;margin:0 0 5px;display:flex;align-items:center;gap:10px;white-space:nowrap}.rack-header>span{font-size:12px;flex-shrink:0}.rack-header>small{display:none}
+ .rack-header #damage-hud{position:static;display:flex;align-items:center;gap:7px;width:auto;min-width:0;flex:1;padding:0;border:0;border-radius:0;background:none;backdrop-filter:none;height:22px}.rack-header #damage-hud>div:first-child{display:flex;gap:6px;min-width:0;flex-shrink:0;justify-content:flex-start}.rack-header #damage-hud span{font-size:9px}.rack-header #damage{font-size:15px;line-height:1}.rack-header #damage small{font-size:10px;margin-left:1px}.rack-header .meter{flex:1;min-width:10px;margin:0;height:3px}
+}
+@media(pointer:coarse) and (max-width:1100px) and (orientation:portrait){
+ #stage{grid-template-rows:48px 142px minmax(0,1fr)}.board-group{padding:3px 12px}.vignette{top:190px;bottom:0}.stage-logo{bottom:8px}.board-meta h1{font-size:11px}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){
+ #stage{grid-template-rows:48px minmax(0,1fr)}.vignette{bottom:0}.stage-logo{bottom:8px}.board-meta{gap:4px}.full-label{display:none}.compact-label{display:inline}.board-meta h1{font-size:11px}.board-meta .energy-panel{gap:5px}.board-meta .energy-panel b{font-size:14px}.board-meta .energy-panel span:after{font-size:8px}.board-meta .wallet{font-size:11px;padding:2px 3px}.board-meta .bench-tools button{padding:3px 4px;font-size:9px}.rack-header{margin-top:3px;font-size:11px;gap:8px}.rack-header>span{font-size:11px}.rack-header #damage-hud{gap:5px}.rack-header #damage-hud span{font-size:8px}.rack-header #damage-hud>div:first-child{gap:4px}
+}
+@media(pointer:coarse) and (max-width:1100px){
+ .board-meta{gap:5px}.board-meta .bench-tools{display:none}.board-meta .energy-panel{margin:0}.rack-header{gap:7px}.rack-header #reorder{width:28px;height:24px;min-width:28px;min-height:24px;padding:0;background:#ffffff08;color:var(--ink);border:1px solid #ffffff1c;border-radius:4px;font-size:15px;line-height:1;flex-shrink:0}.rack-header #reorder .swap-label{display:none}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){.board-meta h1{font-size:10px}.board-meta{gap:4px}}
