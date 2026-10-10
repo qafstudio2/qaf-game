@@ -90,6 +90,10 @@ html.friend-embed{scroll-behavior:auto}
     queueSize();notify('scroll-top');
   }
   player.querySelector('.friend-back').addEventListener('click',exitGame);
+  window.addEventListener('message',event=>{
+    const frame=player.querySelector('.friend-screen iframe');
+    if(frame&&event.origin===location.origin&&event.source===frame.contentWindow&&event.data?.namespace==='qaf-game'&&event.data.type==='exit-game')exitGame();
+  });
   function openGame(game,button){
     activeButton=button;catalogue.hidden=true;player.hidden=false;
     player.querySelector('h2').textContent=game.title;
