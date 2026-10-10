@@ -4,3 +4,9 @@
 
 /* Full-width two-finger pad; no scroll/zoom gesture steals repeated taps. */
 #scene{bottom:255px}.performance{bottom:158px}.game-logo{bottom:270px}.pick-area{bottom:0;left:0;right:0;display:flex;flex-direction:column;gap:0;padding:0 0 6px}#pick{width:100%!important;height:112px!important;flex-shrink:0;touch-action:none;border-radius:0;background:linear-gradient(90deg,#293644 49.8%,#485766 50%,#293644 50.2%)}#pick svg{left:calc(50% - 42.5px)!important;top:9px;transform-origin:center;translate:0!important}#pick[data-stroke=left] svg{transform:translateX(-18px) rotate(90deg)}#pick[data-stroke=right] svg{transform:translateX(18px) rotate(-90deg)}#pick>button{touch-action:none;border-radius:0}#pick>span{top:0}.pick-area p{max-width:none;margin:3px 10px 0;text-align:center;font-size:10px;line-height:1.5}.pick-area p br{display:none}.pick-area p br:after{content:' · '}@media(max-height:650px){#scene{bottom:247px}.performance{bottom:150px}.game-logo{bottom:260px}#pick{height:104px!important}.pick-area p{font-size:9px}.overlay article{overflow:auto}.overlay .help{font-size:10px}}
+
+/* Highlight the highest speed from the completed round. */
+.peak-reading{display:block;margin:5px 0 9px;font-size:34px;line-height:1.3;font-variant-numeric:tabular-nums;color:#9b494d}.peak-reading small{font-size:15px;color:#647672}#result-details{display:block;font-size:12px}@media(max-height:650px){.peak-reading{font-size:30px}}
+
+/* Dialogue stays in the left margin, clear of the header and drummer face. */
+#speech{top:126px;left:12px;right:auto;width:clamp(96px,28%,140px);padding:8px 10px;font-size:11px;line-height:1.6;text-align:left}@media(max-height:650px){#speech{top:126px;padding:7px 9px;font-size:11px}}
