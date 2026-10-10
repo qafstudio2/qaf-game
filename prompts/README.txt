@@ -27,6 +27,14 @@ AI出氣拳-主選單.png：https://drive.google.com/file/d/1G80FnnElY_8gt8ebmxy
 腳踝終結者截圖為 ankle-8 正式版；前面三款沿用原備份截圖，未重新宣稱為本次版本。
 本包是整理後的延續開發提示詞，不是逐字聊天紀錄。
 
+金屬爆破大王｜rock-9（原搖滾拆除大隊；沿用原文件與資料夾 ID）
+二關完整外牆與招牌：https://drive.google.com/file/d/1_e_ONcOehi6R8tmMV3zTUx36T1oHgUsv/view?usp=drivesdk
+三關實牆大樓：https://drive.google.com/file/d/17r4XRhB7XlX3JKKckCPaqp5OPdAOxAeG/view?usp=drivesdk
+顧客逃跑：https://drive.google.com/file/d/1ODRDQEeBlnPvEfNMtgIPd93lU9VWkrxC/view?usp=drivesdk
+倉庫斷電：https://drive.google.com/file/d/1hptaK0hKBbQaiVrJDzxXCAW7eBLkNSFN/view?usp=drivesdk
+新名稱主選單：https://drive.google.com/file/d/1ZvTE7MLwZqaDBc_Acm2H22USYYoyiq9H/view?usp=drivesdk
+正式試玩：https://qafstudio2.github.io/qaf-game/rock-demolition/?v=rock-9
+
 搖滾拆除大隊｜第一關試玩
 提示詞：https://docs.google.com/document/d/1KWmKs9PexzcWd4xJkAeUU_lKSxIAvTpH8J_xKTFAWJg/edit?usp=drivesdk
 資料夾：https://drive.google.com/drive/folders/19COh_3xREvmjzkdsVRNvqf_C9i8RNiAj
