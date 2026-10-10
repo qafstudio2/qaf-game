@@ -50,3 +50,6 @@ C 音檔長約 0.18 秒，以 SpeedY 的真實 E2、E3 手掌悶音錄音疊成 
 
 共同原則文件：https://docs.google.com/document/d/1mQh7edXYeg2lKA9hYXu5niu66TMTJqSmcuyolDFP1Zc/edit?usp=drivesdk
 四款提示詞總包：https://docs.google.com/document/d/1pNRfOirQ6jk4PQpjwCMTVTIz4P2Z2nRm37hbkZiSOzs/edit?usp=drivesdk
+
+九、主選單文字精簡（ankle-9 後續更正）
+主選單拿掉八下鼓節奏表及整段 BPM、負荷、過門、連打等詳細玩法說明。保留標題、簡短介紹、開始按鈕、遊玩次數及回首頁。首頁卡片介紹和操作文字亦精簡。詳細數值留在開發提示詞，遊戲實際玩法保持既有規則。
