@@ -13,3 +13,6 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 @media(orientation:landscape) and (max-height:550px){#rack{grid-template-columns:repeat(2,minmax(0,1fr))}.rack-pedal strong{font-size:11px}.rack-pedal small{font-size:10px}.rack-pedal{min-height:43px}.job strong{font-size:13px}nav button,nav a{font-size:11px}.site-tag{font-size:10px}.energy-panel>span{font-size:10px}.empty-slot small{font-size:10px}.action-bar button{font-size:13px}.rack-header span{font-size:12px}}
+
+.load-progress{margin:14px 0 12px;text-align:left}.load-progress>div{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;font-size:12px;color:#62594e}.load-progress b{color:#945e2f;font-variant-numeric:tabular-nums}.load-progress progress{display:block;width:100%;height:8px;border:0;border-radius:8px;overflow:hidden;appearance:none;background:#33383d;color:#d6a56d}.load-progress progress::-webkit-progress-bar{background:#33383d;border-radius:8px}.load-progress progress::-webkit-progress-value{background:linear-gradient(90deg,#916548,#e7ba80);border-radius:8px}.load-progress progress::-moz-progress-bar{background:#d6a56d;border-radius:8px}
+
