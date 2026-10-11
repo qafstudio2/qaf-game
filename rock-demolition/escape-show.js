@@ -1,4 +1,4 @@
-// Progress drives entrances; elapsed time drives the short, unskippable visual finales.
+// Progress can bring entrances forward; elapsed seconds keep runners moving and the solo populated.
 // Actors live outside the architecture group so they never alter the building camera fit.
 function factory(T){
  const sphere=new T.SphereGeometry(1,18,12),cube=new T.BoxGeometry(1,1,1),materials=new Map();
@@ -42,8 +42,8 @@ export function makeGrandma(T,index=0,charred=false){
 
 export function buildEscapeShow(T,scene,customers,occupants,critters){
  const {material,mesh,ball,box,rod}=factory(T),v=(x=0,y=0,z=0)=>new T.Vector3(x,y,z),clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
- let stage=0,progress=0,clock=0,blastAge=-1,running=false;
- const events=[],animals=[],vehicles=[];
+ let stage=0,progress=0,clock=0,blastAge=-1,running=false,solo=0,fillClock=0,fillCursor=0,entranceTime=0;
+ const events=[],animals=[],vehicles=[],extras=[];
  const soot=makeGrandma(T,0,true);soot.g.visible=false;soot.g.scale.setScalar(1.35);scene.add(soot.g);
 
  function striped(kind){
@@ -89,9 +89,9 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
  vehicles.push({g:bike,kind:'motorcycle',at:83,wheels:bikeWheels,emerged:false,escaped:false});
 
  // Reuse geometry/materials for the stampede, with separate joints on each actor.
- function cloneActor(source,at,index){const g=source.g.clone(true),map=new Map();function pair(a,b){map.set(a,b);a.children.forEach((child,i)=>pair(child,b.children[i]));}pair(source.g,g);scene.add(g);const o={...source,g,at,index,emerged:false,escaped:false};if(source.legs)o.legs=source.legs.map(l=>map.get(l));if(source.wheels)o.wheels=source.wheels.map(l=>map.get(l));if(source.head)o.head=map.get(source.head);if(source.tail)o.tail=map.get(source.tail);return o;}
- for(const [kind,at]of[['zebra',18],['lion',28],['tiger',38]]){const source=animals.find(o=>o.kind===kind);source.index=0;for(let i=1;i<4;i++)animals.push(cloneActor(source,at+i*2.1,i));}animals.sort((a,b)=>a.at-b.at);
- for(const [kind,at]of[['car',51],['motorcycle',65]]){const source=vehicles.find(o=>o.kind===kind);source.at=at;source.index=0;for(let i=1;i<6;i++)vehicles.push(cloneActor(source,at+i*1.65,i));}vehicles.sort((a,b)=>a.at-b.at);
+ function cloneActor(source,at,index){const g=source.g.clone(true),map=new Map();function pair(a,b){map.set(a,b);a.children.forEach((child,i)=>pair(child,b.children[i]));}pair(source.g,g);scene.add(g);const o={...source,g,at,index,emerged:false,escaped:false};if(source.arms)o.arms=source.arms.map(l=>map.get(l));if(source.legs)o.legs=source.legs.map(l=>map.get(l));if(source.wheels)o.wheels=source.wheels.map(l=>map.get(l));if(source.head)o.head=map.get(source.head);if(source.tail)o.tail=map.get(source.tail);return o;}
+ for(const [kind,at]of[['zebra',14],['lion',24],['tiger',34]]){const source=animals.find(o=>o.kind===kind);source.index=0;source.at=at;for(let i=1;i<8;i++)animals.push(cloneActor(source,at+i*.9,i));}animals.sort((a,b)=>a.at-b.at);
+ for(const [kind,at]of[['car',47],['motorcycle',61]]){const source=vehicles.find(o=>o.kind===kind);source.at=at;source.index=0;for(let i=1;i<12;i++)vehicles.push(cloneActor(source,at+i*.9,i));}vehicles.sort((a,b)=>a.at-b.at);
 
  // Three-storey soot-covered hero, completely hidden until the detonation.
  const hero=new T.Group();scene.add(hero);hero.visible=false;
@@ -114,44 +114,55 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
  const smokeMap=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d'),r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,'rgba(100,100,103,.9)');r.addColorStop(.6,'rgba(92,94,97,.55)');r.addColorStop(1,'rgba(70,73,80,0)');g.fillStyle=r;g.fillRect(0,0,64,64);return new T.CanvasTexture(c);})();
  const smoke=Array.from({length:18},(_,i)=>{const s=new T.Sprite(new T.SpriteMaterial({map:smokeMap,transparent:true,depthWrite:false,opacity:0}));scene.add(s);s.visible=false;return {g:s,i};});
 
- function reset(level){stage=level;clock=progress=0;blastAge=-1;running=false;events.length=0;hero.visible=soot.g.visible=false;hero.userData.passed=false;smoke.forEach(o=>o.g.visible=false);
-  for(const o of customers){o.flee=o.escaped=o.emerged=o.knocked=o.startedRun=false;o.blastAge=-1;o.g.visible=o.stage===stage&&(stage===1||o.index<6);o.g.position.copy(o.home);o.g.rotation.set(0,o.idleYaw||0,0);o.arms.forEach(a=>a.rotation.set(0,0,0));o.legs.forEach(l=>l.rotation.set(0,0,0));}
-  for(const o of [...animals,...vehicles]){o.g.visible=false;o.g.position.set(0,.28,-1.5);o.g.rotation.set(0,0,0);o.emerged=o.escaped=false;}
+ function reset(level){stage=level;clock=progress=solo=fillClock=fillCursor=entranceTime=0;blastAge=-1;running=false;events.length=0;hero.visible=soot.g.visible=false;hero.userData.passed=false;smoke.forEach(o=>o.g.visible=false);
+  for(const o of [...customers,...extras]){o.escapeAge=-1;o.firstEmergence=false;o.round=0;o.flee=o.escaped=o.emerged=o.knocked=o.startedRun=false;o.blastAge=-1;o.g.visible=!o.extra&&o.stage===stage&&(stage===1||o.index<6);o.g.position.copy(o.home);o.g.rotation.set(0,o.idleYaw||0,0);o.arms.forEach(a=>a.rotation.set(0,0,0));o.legs.forEach(l=>l.rotation.set(0,0,0));}
+  for(const o of [...critters,...animals,...vehicles]){o.escapeAge=-1;o.firstEmergence=false;o.round=0;o.g.visible=false;o.g.position.set(0,.28,-1.5);o.g.rotation.set(0,0,0);o.emerged=o.escaped=false;}
  }
  function charge(value){progress=Math.max(progress,value);}
- function log(kind,index){events.push({kind,index,progress});}
+ function log(kind,index,o){events.push({kind,index,progress,extra:!!o?.extra||!!o?.round});if(o)o.firstEmergence=true;}
+ function intensify(amount){solo=Math.max(solo,.35+.65*clamp(amount||0));}
+ // Progress only releases actors. Travel and footfalls use elapsed seconds, never damage deltas.
+ function travelAge(o,at,dt,allowed=true){if(o.escapeAge<0){if(blastAge>=0||!allowed||clock<at)return -1;o.escapeAge=0;}else if(!o.escaped)o.escapeAge+=dt*(o.isGrandma?1:1+solo*.18);return o.escapeAge;}
  function runPose(o,age,slow=false){const pace=age*(slow?13:23)+(o.index||0);o.g.rotation.x=slow?.14:-.13;o.g.rotation.z=Math.sin(pace*.5)*(slow?.035:.07);o.legs.forEach((l,i)=>l.rotation.x=Math.sin(pace+i*Math.PI)*(slow?.24:.76));o.arms.forEach((a,i)=>{a.rotation.x=Math.sin(pace+i*Math.PI)*(slow?.18:.72);a.rotation.z=(i?1:-1)*(slow?.12:.32);});}
- function people(){for(const o of customers){if(o.stage!==stage||o.knocked)continue;const granny=!!o.isGrandma,exit=v(stage===0?.38:0,.28,1.72),side=o.index%2?1:-1,outside=v(side*(granny?3.3:10),.13,granny?3.6:4.1),insideDistance=o.home.distanceTo(exit),slowSpeed=.68;
-   const at=stage===0?(granny?72+(o.index-15)*4-insideDistance/slowSpeed*11:3+o.index*3.6):2+o.index*(stage===1?1.5:2),age=(clock-at)/11;
+ function people(dt=0){const ordinary=customers.filter(o=>o.stage===0&&!o.isGrandma),granniesReady=ordinary.every(o=>o.firstEmergence);
+  for(const o of [...customers,...extras]){if(o.stage!==stage||o.knocked||o.escaped)continue;const granny=!!o.isGrandma,exit=v(stage===0?.38:0,.28,1.72),side=o.index%2?1:-1,outside=v(side*(granny?9:10),.13,granny?3.6:4.1),insideDistance=o.home.distanceTo(exit),speed=granny?1.25:8;
+   const at=stage===0?(granny?18+(o.index-30)*.4:.5+o.index*.45):.5+o.index*(stage===1?.35:.45),age=travelAge(o,at,dt,!o.extra&&(!granny||granniesReady));
    if(age<0)continue;o.startedRun=o.flee=true;o.elapsed=age;o.g.visible=true;
-   const doorTime=granny?insideDistance/slowSpeed:.35,outsideTime=granny?exit.distanceTo(outside)/slowSpeed:1.45;
-   let a,b,u;if(age<doorTime){a=o.home;b=exit;u=age/doorTime;}else{if(!o.emerged){o.emerged=true;log(granny?'grandma':'customer',o.index);}a=exit;b=outside;u=clamp((age-doorTime)/outsideTime);}
+   const doorTime=insideDistance/speed,outsideTime=exit.distanceTo(outside)/speed;
+   let a,b,u;if(age<doorTime){a=o.home;b=exit;u=age/doorTime;}else{if(!o.emerged){o.emerged=true;log(granny?'grandma':'customer',o.index,o);}a=exit;b=outside;u=clamp((age-doorTime)/outsideTime);}
    o.g.position.copy(a).lerp(b,u);o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);runPose(o,age,granny);o.g.position.y+=Math.abs(Math.sin(age*(granny?13:23)))*(granny?.018:.055);
-   if(!granny&&age>1.80){o.escaped=true;o.g.visible=false;}
+   if(age>doorTime+outsideTime){o.escaped=true;o.g.visible=false;}
   }}
- function pests(t){if(stage!==1)return;for(const o of critters){const at=o.kind==='rat'?41+o.index*.32:45+o.index*(o.kind==='roach'?.22:.09),age=(clock-at)/18;o.elapsed=age;if(age<0||o.escaped)continue;
+ function pests(t,dt=0){if(stage!==1)return;const peopleReady=customers.filter(o=>o.stage===1).every(o=>o.firstEmergence),ratsReady=critters.filter(o=>o.kind==='rat').every(o=>o.firstEmergence);
+  for(const o of critters){if(o.escaped)continue;const at=o.kind==='rat'?30+o.index*.23:40+o.index*(o.kind==='roach'?.18:.075),age=travelAge(o,at,dt,peopleReady&&(o.kind==='rat'||ratsReady));o.elapsed=age;if(age<0)continue;
    o.g.visible=true;const side=o.index%2?1:-1,exit=v((o.index%3-1)*.18,.25,1.72),safe=v(side*(8.5+o.index%4),.11,3.7+(o.index%5)*.19);let a,b,u;
-   if(age<.14){a=o.home;b=exit;u=age/.14;}else{a=exit;b=safe;u=clamp((age-.14)/.80);if(!o.emerged){o.emerged=true;log(o.kind,o.index);}}
-   o.g.position.copy(a).lerp(b,u);o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);o.legs.forEach((l,i)=>l.rotation.z=o.legHomes[i].z+Math.sin(t*34+i*Math.PI+o.index)*.25);
+   if(age<.14){a=o.home;b=exit;u=age/.14;}else{a=exit;b=safe;u=clamp((age-.14)/.80);if(!o.emerged){o.emerged=true;log(o.kind,o.index,o);}}
+   o.g.position.copy(a).lerp(b,u);o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);o.legs.forEach((l,i)=>l.rotation.z=o.legHomes[i].z+Math.sin(age*34+i*Math.PI+o.index)*.25);
    if(age>.94){o.escaped=true;o.g.visible=false;}
   }}
- function surprises(t){if(stage!==2)return;for(const [i,o]of [...animals,...vehicles].entries()){const age=(clock-o.at)/18;if(age<0)continue;o.g.visible=true;const side=i%2?-1:1,lane=o.legs?0:(o.index%2)*.16,exit=v((o.index%2?1:-1)*.14,.28,1.78),road=v(0,.13,5.20+lane),turn=v(side*1.8,.13,5.65+lane),safe=v(side*12,.13,5.65+lane);let a,b,u;
+ function surprises(t,dt=0){if(stage!==2)return;for(const [i,o]of [...animals,...vehicles].entries()){if(o.escaped)continue;const age=travelAge(o,o.at,dt);if(age<0)continue;o.g.visible=true;const side=i%2?-1:1,lane=o.legs?0:(o.index%2)*.16,exit=v((o.index%2?1:-1)*.14,.28,1.78),road=v(0,.13,5.20+lane),turn=v(side*1.8,.13,5.65+lane),safe=v(side*12,.13,5.65+lane);let a,b,u;
    if(age<.16){a=v(exit.x,.28,-1.25);b=exit;u=age/.16;}else if(age<.36){a=exit;b=road;u=(age-.16)/.20;}else if(age<.54){a=road;b=turn;u=(age-.36)/.18;}else{a=turn;b=safe;u=clamp((age-.54)/.72);}
-   if(age>=.16&&!o.emerged){o.emerged=true;log(o.kind,i);}
+   if(age>=.16&&!o.emerged){o.emerged=true;log(o.kind,i,o);}
    o.g.position.copy(a).lerp(b,u);const direction=Math.atan2(b.x-a.x,b.z-a.z);o.g.rotation.y=direction;
-   if(o.legs){o.legs.forEach((l,j)=>l.rotation.x=Math.sin(age*38+(j%2)*Math.PI+(j>1?Math.PI:0))*.90);o.g.position.y+=Math.abs(Math.sin(age*38))*.10;o.head.rotation.z=Math.sin(t*13)*.07;o.head.rotation.x=-.11;o.tail.rotation.y=Math.sin(t*24)*.5;}
+   if(o.legs){o.legs.forEach((l,j)=>l.rotation.x=Math.sin(age*38+(j%2)*Math.PI+(j>1?Math.PI:0))*.90);o.g.position.y+=Math.abs(Math.sin(age*38))*.10;o.head.rotation.z=Math.sin(age*13)*.07;o.head.rotation.x=-.11;o.tail.rotation.y=Math.sin(age*24)*.5;}
    else{o.wheels.forEach(w=>w.rotation.x=-age*38);o.g.rotation.z=age>.36&&age<.54?side*(o.kind==='motorcycle'?.23:.035):Math.sin(age*24)*.015;}
    if(age>1.26){o.escaped=true;o.g.visible=false;}
   }}
+ // Reuse offscreen actors to keep the later solo populated without unbounded meshes.
+ function refill(dt){const base=stage===0?customers.filter(o=>o.stage===0):stage===1?critters:[...animals,...vehicles];if(!base.every(o=>o.firstEmergence))return;
+  const interval=stage===0?.38:stage===1?.075:.13;fillClock+=dt*(1+solo*.9);if(fillClock<interval)return;fillClock%=interval;
+  let o;if(stage===0){o=extras.find(o=>o.escaped||o.escapeAge<0);if(!o&&extras.length<10){const source=customers.find(o=>o.isGrandma);o=cloneActor(source,0,40+extras.length);o.extra=true;o.home=source.home.clone();o.home.x+=extras.length%3*.20;o.g.visible=false;extras.push(o);}}else{for(let i=0;i<base.length;i++){const candidate=base[(fillCursor++)%base.length];if(candidate.escaped){o=candidate;break;}}}
+  if(o){o.escapeAge=0;o.round=(o.round||0)+1;o.escaped=o.emerged=o.knocked=false;o.g.visible=false;}
+ }
  function upstairs(dt,t){if(stage!==1)return;for(const [i,o]of occupants.filter(o=>o.stage===1).entries()){o.g.visible=true;const a=t*4.3+i*Math.PI,dx=Math.sin(a)*.36,dz=Math.cos(a)*.63;o.g.position.set(o.home.x+dx,o.home.y+Math.abs(Math.sin(t*22))*.05,.64+dz);o.g.rotation.y=Math.atan2(Math.cos(a)*.36,-Math.sin(a)*.63);runPose(o,t+i);o.arms.forEach((arm,j)=>arm.rotation.z=(j?1:-1)*(1.6+Math.sin(t*18)*.5));}}
- function detonate(){clock=100;people();pests(0);surprises(0);blastAge=0;running=false;
-  if(stage===0)for(const o of customers.filter(o=>o.stage===0&&o.isGrandma&&o.g.visible)){o.knocked=true;o.blastHome=o.g.position.clone();o.blastTurn=o.g.rotation.y;o.blastAge=0;log('grandma-knocked',o.index);}
+ function detonate(){blastAge=0;running=false;
+  if(stage===0)for(const o of [...customers,...extras].filter(o=>o.stage===0&&o.isGrandma&&o.g.visible)){o.knocked=true;o.blastHome=o.g.position.clone();o.blastTurn=o.g.rotation.y;o.blastAge=0;log('grandma-knocked',o.index);}
   if(stage===1){soot.g.position.set(0,.21,2.50);soot.g.rotation.set(0,.30,0);smoke.forEach(o=>o.g.visible=true);critters.forEach(o=>o.g.visible=false);}
   if(stage===2){hero.visible=true;hero.position.set(0,3.40,-.1);hero.rotation.set(0,0,0);log('giant-reveal',0);}
  }
- function update(dt,t,active){running=active;if(blastAge<0){if(stage===1)for(const o of customers.filter(o=>o.stage===1&&!o.startedRun)){o.g.rotation.y=o.idleYaw+Math.sin(t*.7+o.index)*.10;o.arms.forEach((a,i)=>a.rotation.x=(o.index%3===i?-.45:0)+Math.sin(t+o.index)*.04);}if(!active||progress<=0)return;clock+=(progress-clock)*Math.min(1,dt*18);people();pests(t);surprises(t);upstairs(dt,t);return;}
-  if(!active)return;blastAge+=dt;
-  if(stage===0)for(const o of customers.filter(o=>o.knocked)){const a=blastAge,side=o.index%2?1:-1;o.blastAge=a;o.g.position.copy(o.blastHome).add(v(side*Math.min(a,1)*1.1,Math.max(0,1.9*a-3.5*a*a),Math.min(a,1)*.9));o.g.position.y=Math.max(.16,o.g.position.y);o.g.rotation.set(-Math.min(1.38,a*2.8),o.blastTurn,side*Math.min(.40,a*.8));o.arms.forEach((arm,i)=>arm.rotation.z=(i?1:-1)*(1.1+Math.sin(a*18)*.3));o.legs.forEach((l,i)=>l.rotation.x=a<1?Math.sin(a*19+i*Math.PI)*.6:.1);}
+ function update(dt,t,active){running=active;if(blastAge<0){if(stage===1)for(const o of customers.filter(o=>o.stage===1&&!o.startedRun)){o.g.rotation.y=o.idleYaw+Math.sin(t*.7+o.index)*.10;o.arms.forEach((a,i)=>a.rotation.x=(o.index%3===i?-.45:0)+Math.sin(t+o.index)*.04);}if(!active||progress<=0)return;entranceTime+=dt*(1+solo*.75);clock+=(Math.max(progress,Math.min(96,entranceTime*18))-clock)*Math.min(1,dt*18);people(dt);pests(t,dt);surprises(t,dt);refill(dt);upstairs(dt,t);return;}
+  if(!active)return;blastAge+=dt;if(stage>0)people(dt);if(stage===2)surprises(t,dt);
+  if(stage===0)for(const o of [...customers,...extras].filter(o=>o.knocked)){const a=blastAge,side=o.index%2?1:-1;o.blastAge=a;o.g.position.copy(o.blastHome).add(v(side*Math.min(a,1)*1.1,Math.max(0,1.9*a-3.5*a*a),Math.min(a,1)*.9));o.g.position.y=Math.max(.16,o.g.position.y);o.g.rotation.set(-Math.min(1.38,a*2.8),o.blastTurn,side*Math.min(.40,a*.8));o.arms.forEach((arm,i)=>arm.rotation.z=(i?1:-1)*(1.1+Math.sin(a*18)*.3));o.legs.forEach((l,i)=>l.rotation.x=a<1?Math.sin(a*19+i*Math.PI)*.6:.1);}
   if(stage===1){soot.g.visible=blastAge>.90;soot.head.rotation.y=Math.sin(Math.max(0,blastAge-1.8)*3)*.12;soot.arms.forEach((a,i)=>a.rotation.z=(i?1:-1)*(.10+Math.sin(t*4)*.015));soot.g.rotation.z=Math.sin(t*5)*.012;
    for(const {g,i}of smoke){const a=blastAge,side=i%2?1:-1;g.position.set(side*(.15+(i%5)*.25+Math.max(0,a-.9)*(1.7+i%3*.25)),.40+(i%6)*.24+a*.22,2.9+Math.sin(i)*.35);g.scale.setScalar(1.0+a*.5);g.material.opacity=clamp(1-(a-.9)/1.4)*.82;g.visible=g.material.opacity>0;}
   }
@@ -167,5 +178,5 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
    timer.material.emissiveIntensity=.35;
   }
  }
- return {reset,charge,detonate,update,present,animals,vehicles,hero,soot,events,get progress(){return clock;},get blastAge(){return blastAge;},get duration(){return [2700,4100,3600][stage];}};
+ return {reset,charge,intensify,detonate,update,present,animals,vehicles,extras,hero,soot,events,get solo(){return solo;},get progress(){return clock;},get blastAge(){return blastAge;},get duration(){return [2700,4100,3600][stage];}};
 }

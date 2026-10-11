@@ -21,3 +21,6 @@ export const CATALOG=[
  {id:'feedback',name:'FEEDBACK',model:'CHAOS / FB-01',color:'#c783a9',cost:900,tier:2,energy:610,family:'feedback',label:'CHAOS',description:'受控回授與長尾追擊，拆除現場更混亂。'}
 ];
 export function calculate(pedals,stage){const active=pedals.filter(p=>p?.on&&p.amount>0),map=new Map(CATALOG.map(p=>[p.id,p]));const base=Math.round(active.reduce((s,p)=>s+map.get(p.id).energy*p.amount/100,0));let bonus=0;const family=id=>active.some(p=>map.get(p.id).family===id);if(family('drive')&&family('boost'))bonus+=60;if(family('fuzz')&&family('echo'))bonus+=45;if(family('space')&&family('echo'))bonus+=30;if(['metalarea','dirtyrat','bomboost'].every(id=>active.some(p=>p.id===id)))bonus+=200;const energy=base+bonus,defense=LEVELS[stage].defense,ratio=energy/defense;return {base,bonus,energy,defense,ratio,fire:Math.min(1.9,ratio*.9),radius:Math.min(2.4,.45+ratio*.8),grade:ratio<.45?'小火花':ratio<.85?'局部起火':ratio<1.3?'整棟燃燒':ratio<1.9?'連鎖大爆破':'超載大爆破'};}
+
+// Solo grows stronger than the same Riff accent; dense notes are not penalized.
+export function attackPower(note){const accent=note.accent?1.65:1,climax=Math.max(0,Math.min(1,note.soloProgress||0));return accent*(note.solo?1.25+climax*.65:1);}
