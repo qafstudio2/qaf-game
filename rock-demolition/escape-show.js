@@ -1,3 +1,4 @@
+import {addAfro,raggedSkirt,makeCameos} from './escape-characters.js?v=rock-33';
 // Progress can bring entrances forward; elapsed seconds keep runners moving and the solo populated.
 // Actors live outside the architecture group so they never alter the building camera fit.
 function factory(T){
@@ -13,13 +14,12 @@ function factory(T){
 export function makeGrandma(T,index=0,charred=false){
  const {material,mesh,ball,box,rod}=factory(T),g=new T.Group(),arms=[],legs=[];
  const skin=charred?'#504940':'#deb495',dress=charred?'#393b3d':['#9881ab','#789b94','#b18682','#7489a9','#b29462'][index%5],hair=charred?'#484640':'#e4ded5';
- mesh(g,new T.CylinderGeometry(.15,.23,.39,20),dress,0,.44,0);
+ if(charred)raggedSkirt(T,g,dress);else mesh(g,new T.CylinderGeometry(.15,.23,.39,20),dress,0,.44,0);
  ball(g,dress,0,.69,0,.18,.19,.13);box(g,charred?'#525251':'#f1dfbc',0,.70,.127,.036,.24,.012);
  for(let i=0;i<3;i++)ball(g,'#c4b386',.025,.61+i*.07,.14,.012);
  const head=new T.Group();head.position.set(0,.95,.045);g.add(head);
  ball(head,skin,0,0,0,.16,.18,.145);
- mesh(head,new T.SphereGeometry(.173,20,12,0,Math.PI*2,0,1.45),hair,0,.035,-.014);
- ball(head,hair,0,.12,-.12,.10);ball(head,skin,0,-.02,.148,.029,.031,.039);
+ if(charred)addAfro(T,head,.27,.065);else{mesh(head,new T.SphereGeometry(.173,20,12,0,Math.PI*2,0,1.45),hair,0,.035,-.014);ball(head,hair,0,.12,-.12,.10);}ball(head,skin,0,-.02,.148,.029,.031,.039);
  for(const side of[-1,1]){
   ball(head,charred?'#faf6de':'#272a2d',side*.057,.015,.139,charred?.040:.013,charred?.037:.015,.011);
   if(charred)ball(head,'#202127',side*.057,.015,.151,.013);
@@ -27,7 +27,7 @@ export function makeGrandma(T,index=0,charred=false){
  }
  box(head,'#a9a690',0,.019,.163,.026,.006,.007);
  const mouth=ball(head,charred?'#101619':'#89584a',0,-.092,.134,.022,charred?.025:.008,.008);
- if(charred)for(let i=0;i<6;i++)rod(head,hair,[(i-2.5)*.04,.14,-.025],[(i-2.5)*.075,.28+(i%2)*.08,-.03],.012);
+ if(charred){for(const [x,y,z]of[[-.095,.74,.13],[.08,.49,.20],[-.12,.37,.20]]){const patch=box(g,'#13191d',x,y,z,.066,.105,.013);patch.rotation.z=.3;}for(let i=0;i<5;i++){const shred=mesh(g,new T.ConeGeometry(.025,.13,3),dress,(i-2)*.065,.26+(i%2)*.025,.17);shred.rotation.z=Math.PI+(i-2)*.18;}}
  for(const side of[-1,1]){
   const arm=new T.Group();arm.position.set(side*.16,.77,0);g.add(arm);rod(arm,dress,[0,0,0],[side*.025,-.22,.01],.049);ball(arm,skin,side*.027,-.25,.015,.045);arms.push(arm);
   const leg=new T.Group();leg.position.set(side*.075,.28,0);g.add(leg);rod(leg,'#9d8979',[0,0,0],[0,-.21,0],.035);ball(leg,'#30323b',0,-.225,.033,.055,.041,.09);legs.push(leg);
@@ -43,8 +43,8 @@ export function makeGrandma(T,index=0,charred=false){
 export function buildEscapeShow(T,scene,customers,occupants,critters){
  const {material,mesh,ball,box,rod}=factory(T),v=(x=0,y=0,z=0)=>new T.Vector3(x,y,z),clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
  let stage=0,progress=0,clock=0,blastAge=-1,running=false,solo=0,fillClock=0,fillCursor=0,entranceTime=0;
- const events=[],animals=[],vehicles=[],extras=[];
- const soot=makeGrandma(T,0,true);soot.g.visible=false;soot.g.scale.setScalar(1.35);scene.add(soot.g);
+ const events=[],animals=[],vehicles=[],extras=[],cameos=makeCameos(T,scene);
+ const soot=makeGrandma(T,0,true),lastGrandma=makeGrandma(T,2);for(const o of[soot,lastGrandma]){o.g.visible=false;o.g.scale.setScalar(1.35);scene.add(o.g);}lastGrandma.home=v(-.18,.28,.70);lastGrandma.age=-1;
 
  function striped(kind){
   const c=document.createElement('canvas');c.width=512;c.height=256;const ctx=c.getContext('2d');
@@ -98,25 +98,28 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
  const silver=material('#333539',.08),red=material('#493239',.06),dark=material('#13191e',.02);
  ball(hero,silver,0,.65,0,.95,1.42,.55);ball(hero,red,0,-.10,.01,.86,.51,.53);
  for(const side of[-1,1]){const chest=box(hero,red,side*.44,1.20,.47,.20,1.48,.08);chest.rotation.z=side*-.47;ball(hero,red,side*.97,1.32,0,.39,.43,.40);
-  rod(hero,silver,[side*.97,1.30,0],[side*1.37,2.43,.06],.29);rod(hero,silver,[side*1.37,2.43,.06],[side*1.42,3.35,.13],.25);
-  ball(hero,silver,side*1.42,3.57,.14,.31,.39,.23);for(let i=0;i<4;i++)ball(hero,silver,side*(1.18+i*.15),3.87,.20,.078,.25,.083);
+  const elbow=[side*1.30,.57,.10],hand=side>0?[1.22,1.00,.79]:[-1.20,.06,.20];rod(hero,silver,[side*.97,1.30,0],elbow,.29);rod(hero,silver,elbow,hand,.25);ball(hero,silver,...hand,.29,.26,.24);
+  for(let i=0;i<4;i++)ball(hero,silver,hand[0]+(i-1.5)*.12,hand[1]-.12,hand[2]+.15,.073,.14,.07);
   rod(hero,silver,[side*.44,-.32,0],[side*.53,-1.65,0],.35);rod(hero,red,[side*.53,-1.65,0],[side*.62,-2.84,.12],.30);ball(hero,red,side*.62,-2.96,.36,.34,.21,.62);
  }
+ const glassHand=new T.Group();glassHand.name='wine held after explosion';glassHand.position.set(1.26,1.10,.98);hero.add(glassHand);
+ const glassMat=new T.MeshPhysicalMaterial({color:'#ddd4bb',roughness:.08,metalness:.05,transparent:true,opacity:.45,side:T.DoubleSide,depthWrite:false});
+ mesh(glassHand,new T.CylinderGeometry(.14,.14,.022,24),glassMat,0,0,0);rod(glassHand,glassMat,[0,0,0],[0,.22,0],.023);mesh(glassHand,new T.CylinderGeometry(.20,.07,.30,28,1,true),glassMat,0,.34,0);mesh(glassHand,new T.CylinderGeometry(.164,.085,.14,28),'#952e36',0,.295,0);mesh(glassHand,new T.TorusGeometry(.20,.009,6,28),glassMat,0,.49,0).rotation.x=Math.PI/2;
  const heroHead=new T.Group();heroHead.position.set(0,2.62,0);hero.add(heroHead);ball(heroHead,silver,0,0,0,.72,.92,.61);
- const crest=box(heroHead,silver,0,.72,-.03,.09,.84,.58);crest.rotation.x=.05;
+ addAfro(T,heroHead,.91,.40);
  const eyeMat=new T.MeshStandardMaterial({color:'#e9e1bf',emissive:'#d5c9a3',emissiveIntensity:.25,roughness:.7});
  for(const side of[-1,1]){const e=ball(heroHead,eyeMat,side*.32,.15,.51,.27,.17,.075);e.rotation.z=side*-.10;ball(heroHead,dark,side*.71,-.04,-.02,.075,.24,.16);ball(heroHead,dark,side*.32,.18,.588,.043,.065,.009);rod(heroHead,dark,[side*.12,.42,.52],[side*.52,.31,.44],.035);ball(heroHead,silver,side*.32,.32,.515,.28,.09,.06);}
  const mouthCurve=new T.CatmullRomCurve3([v(-.21,-.46,.54),v(0,-.37,.59),v(.21,-.46,.54)]);mesh(heroHead,new T.TubeGeometry(mouthCurve,16,.028,6,false),dark,0,0,0);rod(heroHead,silver,[0,.04,.63],[0,-.23,.66],.054);
  const timer=ball(hero,new T.MeshStandardMaterial({color:'#ad5750',emissive:'#6e1714',emissiveIntensity:.35}),0,1.03,.56,.16,.21,.06);
- // Keep the resigned face and raised hands readable during the upward launch.
- const closeSphere=new T.SphereGeometry(1,64,40);heroHead.traverse(o=>{if(o.isMesh&&o.geometry.type==='SphereGeometry')o.geometry=closeSphere;});
+ // Keep the soot face, round afro and glass readable in the stationary reveal.
+ const closeSphere=new T.SphereGeometry(1,64,40);heroHead.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh&&o.geometry.type==='SphereGeometry'&&o.geometry.parameters.thetaLength===Math.PI)o.geometry=closeSphere;});
 
  const smokeMap=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d'),r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,'rgba(100,100,103,.9)');r.addColorStop(.6,'rgba(92,94,97,.55)');r.addColorStop(1,'rgba(70,73,80,0)');g.fillStyle=r;g.fillRect(0,0,64,64);return new T.CanvasTexture(c);})();
  const smoke=Array.from({length:18},(_,i)=>{const s=new T.Sprite(new T.SpriteMaterial({map:smokeMap,transparent:true,depthWrite:false,opacity:0}));scene.add(s);s.visible=false;return {g:s,i};});
 
- function reset(level){stage=level;clock=progress=solo=fillClock=fillCursor=entranceTime=0;blastAge=-1;running=false;events.length=0;hero.visible=soot.g.visible=false;hero.userData.passed=false;smoke.forEach(o=>o.g.visible=false);
+ function reset(level){stage=level;clock=progress=solo=fillClock=fillCursor=entranceTime=0;blastAge=-1;running=false;events.length=0;hero.visible=soot.g.visible=lastGrandma.g.visible=false;lastGrandma.age=-1;lastGrandma.g.position.copy(lastGrandma.home);lastGrandma.g.rotation.set(0,0,0);hero.userData.passed=false;smoke.forEach(o=>o.g.visible=false);
   for(const o of [...customers,...extras]){o.escapeAge=-1;o.firstEmergence=false;o.round=0;o.flee=o.escaped=o.emerged=o.knocked=o.startedRun=false;o.blastAge=-1;o.g.visible=!o.extra&&o.stage===stage&&(stage===1||o.index<6);o.g.position.copy(o.home);o.g.rotation.set(0,o.idleYaw||0,0);o.arms.forEach(a=>a.rotation.set(0,0,0));o.legs.forEach(l=>l.rotation.set(0,0,0));}
-  for(const o of [...critters,...animals,...vehicles]){o.escapeAge=-1;o.firstEmergence=false;o.round=0;o.g.visible=false;o.g.position.set(0,.28,-1.5);o.g.rotation.set(0,0,0);o.emerged=o.escaped=false;}
+  for(const o of [...critters,...animals,...vehicles,...cameos]){o.escapeAge=-1;o.firstEmergence=false;o.round=0;o.scatterRound=-1;o.g.visible=false;o.g.position.set(0,.28,-1.5);o.g.rotation.set(0,0,0);o.emerged=o.escaped=false;}
  }
  function charge(value){progress=Math.max(progress,value);}
  function log(kind,index,o){events.push({kind,index,progress,extra:!!o?.extra||!!o?.round});if(o)o.firstEmergence=true;}
@@ -133,23 +136,37 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
    o.g.position.copy(a).lerp(b,u);o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);runPose(o,age,granny);o.g.position.y+=Math.abs(Math.sin(age*(granny?13:23)))*(granny?.018:.055);
    if(age>doorTime+outsideTime){o.escaped=true;o.g.visible=false;}
   }}
+ // Fan out across the foreground and diagonals, with the two far lanes curling into alleys.
+ const fan=[[ -13,3.6],[-11,10],[-3.5,14],[2.5,14],[10,11],[13,4],[14,-7],[-14,-7],[6,14],[-8,13]];
+ function scatter(o,age,speed,index,start){
+  if(o.scatterRound!==(o.round||0)){o.scatterRound=o.round||0;const k=(index*3+o.scatterRound*7)%fan.length,end=fan[k],exit=v((index%3-1)*.15,.25,1.76),launch=v((index%3-1)*.20,.12,3.75);o.path=[start.clone(),exit,launch];if(end[1]<0)o.path.push(v(Math.sign(end[0])*12,.12,4.2));o.path.push(v(end[0],.12,end[1]));o.pathLength=o.path.slice(1).reduce((sum,p,i)=>sum+p.distanceTo(o.path[i]),0);o.doorDistance=start.distanceTo(exit);o.escapeDirection=k;}
+  let remaining=age*speed,a=o.path[0],b=o.path[1];for(let i=1;i<o.path.length;i++){a=o.path[i-1];b=o.path[i];const length=a.distanceTo(b);if(remaining<=length||i===o.path.length-1){o.g.position.copy(a).lerp(b,clamp(remaining/length));break;}remaining-=length;}
+  o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);return {outside:age*speed>=o.doorDistance,done:age*speed>=o.pathLength};
+ }
  function pests(t,dt=0){if(stage!==1)return;const peopleReady=customers.filter(o=>o.stage===1).every(o=>o.firstEmergence),ratsReady=critters.filter(o=>o.kind==='rat').every(o=>o.firstEmergence);
   for(const o of critters){if(o.escaped)continue;const at=o.kind==='rat'?30+o.index*.23:40+o.index*(o.kind==='roach'?.18:.075),age=travelAge(o,at,dt,peopleReady&&(o.kind==='rat'||ratsReady));o.elapsed=age;if(age<0)continue;
-   o.g.visible=true;const side=o.index%2?1:-1,exit=v((o.index%3-1)*.18,.25,1.72),safe=v(side*(8.5+o.index%4),.11,3.7+(o.index%5)*.19);let a,b,u;
-   if(age<.14){a=o.home;b=exit;u=age/.14;}else{a=exit;b=safe;u=clamp((age-.14)/.80);if(!o.emerged){o.emerged=true;log(o.kind,o.index,o);}}
-   o.g.position.copy(a).lerp(b,u);o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);o.legs.forEach((l,i)=>l.rotation.z=o.legHomes[i].z+Math.sin(age*34+i*Math.PI+o.index)*.25);
-   if(age>.94){o.escaped=true;o.g.visible=false;}
+   o.g.visible=true;const offset=o.kind==='rat'?0:o.kind==='roach'?2:5,out=scatter(o,age,13,o.index+offset,o.home);
+   if(out.outside&&!o.emerged){o.emerged=true;log(o.kind,o.index,o);}o.legs.forEach((l,i)=>l.rotation.z=o.legHomes[i].z+Math.sin(age*34+i*Math.PI+o.index)*.25);
+   if(out.done){o.escaped=true;o.g.visible=false;}
   }}
+ function slowLastGrandma(dt){if(stage!==1)return;if(lastGrandma.age<0){if(clock<57)return;lastGrandma.age=0;lastGrandma.g.visible=true;lastGrandma.g.position.copy(lastGrandma.home);log('last-grandma-walking',0);}lastGrandma.age+=dt;
+  // Walk continuously at a very slow speed, with an in-room destination before the threshold.
+  lastGrandma.g.position.copy(lastGrandma.home);lastGrandma.g.position.z+=.56*(1-Math.exp(-lastGrandma.age*.14));lastGrandma.g.rotation.y=.04;runPose(lastGrandma,lastGrandma.age*.43,true);
+ }
+ function heroWave(dt){if(stage!==2)return;for(const o of cameos){if(o.escaped)continue;const age=travelAge(o,o.at,dt);if(age<0)continue;o.g.visible=true;
+  const out=scatter(o,age,11.5,o.index+2,v((o.index%2?1:-1)*.12,.28,-.7));if(out.outside&&!o.emerged){o.emerged=true;log(o.kind,o.index,o);}const air=Math.max(0,age-o.doorDistance/11.5);
+  runPose(o,age);if(out.outside){if(['fly','glide'].includes(o.motion)){o.g.position.y+=Math.min(3.0,air*3);o.g.rotation.x=-.60;o.arms.forEach((a,i)=>{a.rotation.x=-2.4;a.rotation.z=(i?1:-1)*.55;});}else if(o.motion==='vault'||o.motion==='leap'){o.g.position.y+=Math.abs(Math.sin(Math.min(1,air/1.2)*Math.PI))*1.55;o.g.rotation.x=o.motion==='vault'?-Math.sin(air*5)*.7:-.25;o.arms.forEach((a,i)=>a.rotation.z=(i?1:-1)*1.7);}else{o.g.position.y+=Math.abs(Math.sin(age*24))*.07;if(o.kind==='naruto')o.arms.forEach(a=>a.rotation.x=1.05);}}if(o.cape){o.cape.rotation.x=-.45-Math.sin(age*16)*.12;o.cape.rotation.z=Math.sin(age*13)*.15;}
+  if(out.done){o.escaped=true;o.g.visible=false;}
+ }}
  function surprises(t,dt=0){if(stage!==2)return;for(const [i,o]of [...animals,...vehicles].entries()){if(o.escaped)continue;const age=travelAge(o,o.at,dt);if(age<0)continue;o.g.visible=true;const side=i%2?-1:1,lane=o.legs?0:(o.index%2)*.16,exit=v((o.index%2?1:-1)*.14,.28,1.78),road=v(0,.13,5.20+lane),turn=v(side*1.8,.13,5.65+lane),safe=v(side*12,.13,5.65+lane);let a,b,u;
+   if(o.legs){const out=scatter(o,age,12,i,v(exit.x,.28,-1.25));if(out.outside&&!o.emerged){o.emerged=true;log(o.kind,i,o);}o.legs.forEach((l,j)=>l.rotation.x=Math.sin(age*38+(j%2)*Math.PI+(j>1?Math.PI:0))*.90);o.g.position.y+=Math.abs(Math.sin(age*38))*.10;o.head.rotation.z=Math.sin(age*13)*.07;o.head.rotation.x=-.11;o.tail.rotation.y=Math.sin(age*24)*.5;if(out.done){o.escaped=true;o.g.visible=false;}continue;}
    if(age<.16){a=v(exit.x,.28,-1.25);b=exit;u=age/.16;}else if(age<.36){a=exit;b=road;u=(age-.16)/.20;}else if(age<.54){a=road;b=turn;u=(age-.36)/.18;}else{a=turn;b=safe;u=clamp((age-.54)/.72);}
-   if(age>=.16&&!o.emerged){o.emerged=true;log(o.kind,i,o);}
-   o.g.position.copy(a).lerp(b,u);const direction=Math.atan2(b.x-a.x,b.z-a.z);o.g.rotation.y=direction;
-   if(o.legs){o.legs.forEach((l,j)=>l.rotation.x=Math.sin(age*38+(j%2)*Math.PI+(j>1?Math.PI:0))*.90);o.g.position.y+=Math.abs(Math.sin(age*38))*.10;o.head.rotation.z=Math.sin(age*13)*.07;o.head.rotation.x=-.11;o.tail.rotation.y=Math.sin(age*24)*.5;}
-   else{o.wheels.forEach(w=>w.rotation.x=-age*38);o.g.rotation.z=age>.36&&age<.54?side*(o.kind==='motorcycle'?.23:.035):Math.sin(age*24)*.015;}
+   if(age>=.16&&!o.emerged){o.emerged=true;log(o.kind,i,o);}o.g.position.copy(a).lerp(b,u);o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);
+   {o.wheels.forEach(w=>w.rotation.x=-age*38);o.g.rotation.z=age>.36&&age<.54?side*(o.kind==='motorcycle'?.23:.035):Math.sin(age*24)*.015;}
    if(age>1.26){o.escaped=true;o.g.visible=false;}
   }}
  // Reuse offscreen actors to keep the later solo populated without unbounded meshes.
- function refill(dt){const base=stage===0?customers.filter(o=>o.stage===0):stage===1?critters:[...animals,...vehicles];if(!base.every(o=>o.firstEmergence))return;
+ function refill(dt){if(stage===2)return;const base=stage===0?customers.filter(o=>o.stage===0):stage===1?critters:[...animals,...vehicles];if(!base.every(o=>o.firstEmergence))return;
   const interval=stage===0?.38:stage===1?.075:.13;fillClock+=dt*(1+solo*.9);if(fillClock<interval)return;fillClock%=interval;
   let o;if(stage===0){o=extras.find(o=>o.escaped||o.escapeAge<0);if(!o&&extras.length<10){const source=customers.find(o=>o.isGrandma);o=cloneActor(source,0,40+extras.length);o.extra=true;o.home=source.home.clone();o.home.x+=extras.length%3*.20;o.g.visible=false;extras.push(o);}}else{for(let i=0;i<base.length;i++){const candidate=base[(fillCursor++)%base.length];if(candidate.escaped){o=candidate;break;}}}
   if(o){o.escapeAge=0;o.round=(o.round||0)+1;o.escaped=o.emerged=o.knocked=false;o.g.visible=false;}
@@ -157,26 +174,25 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
  function upstairs(dt,t){if(stage!==1)return;for(const [i,o]of occupants.filter(o=>o.stage===1).entries()){o.g.visible=true;const a=t*4.3+i*Math.PI,dx=Math.sin(a)*.36,dz=Math.cos(a)*.63;o.g.position.set(o.home.x+dx,o.home.y+Math.abs(Math.sin(t*22))*.05,.64+dz);o.g.rotation.y=Math.atan2(Math.cos(a)*.36,-Math.sin(a)*.63);runPose(o,t+i);o.arms.forEach((arm,j)=>arm.rotation.z=(j?1:-1)*(1.6+Math.sin(t*18)*.5));}}
  function detonate(){blastAge=0;running=false;
   if(stage===0)for(const o of [...customers,...extras].filter(o=>o.stage===0&&o.isGrandma&&o.g.visible)){o.knocked=true;o.blastHome=o.g.position.clone();o.blastTurn=o.g.rotation.y;o.blastAge=0;log('grandma-knocked',o.index);}
-  if(stage===1){soot.g.position.set(0,.21,2.50);soot.g.rotation.set(0,.30,0);smoke.forEach(o=>o.g.visible=true);critters.forEach(o=>o.g.visible=false);}
-  if(stage===2){hero.visible=true;hero.position.set(0,3.40,-.1);hero.rotation.set(0,0,0);log('giant-reveal',0);}
+  if(stage===1){soot.g.position.copy(lastGrandma.g.position);soot.g.quaternion.copy(lastGrandma.g.quaternion);soot.g.visible=true;lastGrandma.g.visible=false;log('grandma-charred-in-place',0);smoke.forEach(o=>o.g.visible=true);critters.forEach(o=>o.g.visible=false);}
+  if(stage===2){hero.visible=true;hero.position.set(0,3.27,.4);hero.rotation.set(0,0,0);log('giant-reveal',0);}
  }
- function update(dt,t,active){running=active;if(blastAge<0){if(stage===1)for(const o of customers.filter(o=>o.stage===1&&!o.startedRun)){o.g.rotation.y=o.idleYaw+Math.sin(t*.7+o.index)*.10;o.arms.forEach((a,i)=>a.rotation.x=(o.index%3===i?-.45:0)+Math.sin(t+o.index)*.04);}if(!active||progress<=0)return;entranceTime+=dt*(1+solo*.75);clock+=(Math.max(progress,Math.min(96,entranceTime*18))-clock)*Math.min(1,dt*18);people(dt);pests(t,dt);surprises(t,dt);refill(dt);upstairs(dt,t);return;}
-  if(!active)return;blastAge+=dt;if(stage>0)people(dt);if(stage===2)surprises(t,dt);
+ function update(dt,t,active){running=active;if(blastAge<0){if(stage===1)for(const o of customers.filter(o=>o.stage===1&&!o.startedRun)){o.g.rotation.y=o.idleYaw+Math.sin(t*.7+o.index)*.10;o.arms.forEach((a,i)=>a.rotation.x=(o.index%3===i?-.45:0)+Math.sin(t+o.index)*.04);}if(!active||progress<=0)return;entranceTime+=dt*(1+solo*.75);clock+=(Math.max(progress,Math.min(96,entranceTime*18))-clock)*Math.min(1,dt*18);people(dt);pests(t,dt);surprises(t,dt);heroWave(dt);refill(dt);slowLastGrandma(dt);upstairs(dt,t);return;}
+  if(!active)return;blastAge+=dt;if(stage>0)people(dt);if(stage===2){surprises(t,dt);heroWave(dt);}
   if(stage===0)for(const o of [...customers,...extras].filter(o=>o.knocked)){const a=blastAge,side=o.index%2?1:-1;o.blastAge=a;o.g.position.copy(o.blastHome).add(v(side*Math.min(a,1)*1.1,Math.max(0,1.9*a-3.5*a*a),Math.min(a,1)*.9));o.g.position.y=Math.max(.16,o.g.position.y);o.g.rotation.set(-Math.min(1.38,a*2.8),o.blastTurn,side*Math.min(.40,a*.8));o.arms.forEach((arm,i)=>arm.rotation.z=(i?1:-1)*(1.1+Math.sin(a*18)*.3));o.legs.forEach((l,i)=>l.rotation.x=a<1?Math.sin(a*19+i*Math.PI)*.6:.1);}
-  if(stage===1){soot.g.visible=blastAge>.90;soot.head.rotation.y=Math.sin(Math.max(0,blastAge-1.8)*3)*.12;soot.arms.forEach((a,i)=>a.rotation.z=(i?1:-1)*(.10+Math.sin(t*4)*.015));soot.g.rotation.z=Math.sin(t*5)*.012;
-   for(const {g,i}of smoke){const a=blastAge,side=i%2?1:-1;g.position.set(side*(.15+(i%5)*.25+Math.max(0,a-.9)*(1.7+i%3*.25)),.40+(i%6)*.24+a*.22,2.9+Math.sin(i)*.35);g.scale.setScalar(1.0+a*.5);g.material.opacity=clamp(1-(a-.9)/1.4)*.82;g.visible=g.material.opacity>0;}
+  if(stage===1){soot.g.visible=true;soot.head.rotation.y=Math.sin(Math.max(0,blastAge-1.8)*3)*.12;soot.arms.forEach((a,i)=>a.rotation.z=(i?1:-1)*(.10+Math.sin(t*4)*.015));soot.g.rotation.z=Math.sin(t*5)*.012;
+   for(const {g,i}of smoke){const a=blastAge,side=i%2?1:-1;g.position.set(soot.g.position.x+side*(.15+(i%5)*.25+Math.max(0,a-.9)*(1.7+i%3*.25)),.40+(i%6)*.24+a*.22,soot.g.position.z+.40+Math.sin(i)*.35);g.scale.setScalar(1.0+a*.5);g.material.opacity=clamp(1-(a-.9)/1.4)*.82;g.visible=g.material.opacity>0;}
   }
  }
  function present(camera){if(blastAge<0)return;
   if(stage===0){const u=clamp(blastAge/.55),look=camera.getWorldDirection(v()).multiplyScalar(10).add(camera.position).lerp(v(0,.85,1.95),u);camera.lookAt(look);}
-  if(stage===1){const u=clamp((blastAge-1.0)/1.2);camera.position.lerp(v(3.2,2.3,7.5),u*.85);const old=camera.getWorldDirection(v()).multiplyScalar(10).add(camera.position),look=old.lerp(v(0,.92,2.5),u);camera.lookAt(look);soot.g.rotation.y=Math.atan2(camera.position.x-soot.g.position.x,camera.position.z-soot.g.position.z);}
+  if(stage===1){const u=clamp((blastAge-1.0)/1.2);camera.position.lerp(soot.g.position.clone().add(v(2.7,2.15,5.5)),u*.85);const old=camera.getWorldDirection(v()).multiplyScalar(10).add(camera.position),look=old.lerp(soot.g.position.clone().add(v(0,.95,0)),u);camera.lookAt(look);soot.g.rotation.y=Math.atan2(camera.position.x-soot.g.position.x,camera.position.z-soot.g.position.z);}
   if(stage===2){
-   // Let the blast clear first, then accelerate upward without approaching the camera.
-   const rise=blastAge*.25+8*Math.max(0,blastAge-1.45)**2;
-   hero.position.set(0,3.4+rise,.4);hero.rotation.set(0,Math.atan2(camera.position.x,camera.position.z-.4),Math.sin(blastAge*8)*.035);
-   if(blastAge>=3.0){hero.visible=false;if(!hero.userData.passed){hero.userData.passed=true;log('giant-flew-up',0);}}
+   // A motionless, embarrassed giant is the punchline; no upward launch or camera flight.
+   hero.position.set(0,3.27,.4);hero.rotation.set(0,Math.atan2(camera.position.x,camera.position.z-.4),0);hero.visible=true;
+   heroHead.rotation.z=Math.sin(blastAge*2.2)*.016;heroHead.rotation.x=.04;glassHand.rotation.z=Math.sin(blastAge*2)*.015;
    timer.material.emissiveIntensity=.35;
   }
  }
- return {reset,charge,intensify,detonate,update,present,animals,vehicles,extras,hero,soot,events,get solo(){return solo;},get progress(){return clock;},get blastAge(){return blastAge;},get duration(){return [2700,4100,3600][stage];}};
+ return {reset,charge,intensify,detonate,update,present,animals,vehicles,cameos,extras,hero,heroHead,glassHand,soot,lastGrandma,events,get solo(){return solo;},get progress(){return clock;},get blastAge(){return blastAge;},get duration(){return [2700,4100,4100][stage];}};
 }
