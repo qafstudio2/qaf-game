@@ -70,7 +70,7 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
   const tail=new T.Group();tail.position.set(0,.91,-.55);g.add(tail);rod(tail,coat,[0,0,0],[.14,-.18,-.44],.032);ball(tail,kind==='lion'?'#67452e':'#2a3030',.14,-.18,-.47,.065,.065,.10);
   const o={g,kind,at,legs,head,tail,emerged:false,escaped:false};animals.push(o);return o;
  }
- animal('zebra',21);animal('lion',37);animal('tiger',53);
+ animal('zebra',18);animal('lion',28);animal('tiger',38);
 
  function wheel(g,x,y,z,r,width){const a=new T.Group();a.position.set(x,y,z);g.add(a);const tire=mesh(a,new T.CylinderGeometry(r,r,width,20),'#20242a',0,0,0);tire.rotation.z=Math.PI/2;const rim=mesh(a,new T.CylinderGeometry(r*.61,r*.61,width+.015,16),material('#aab4b7',.8),0,0,0);rim.rotation.z=Math.PI/2;for(let i=0;i<6;i++){const spoke=box(a,'#455059',0,0,0,width+.022,r*1.06,.024);spoke.rotation.x=i*Math.PI/3;}return a;}
  const car=new T.Group();scene.add(car);car.visible=false;const carWheels=[];
@@ -88,52 +88,60 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
  for(const side of[-1,1]){rod(bike,'#273946',[side*.17,1.20,-.06],[side*.30,.94,.47],.057);ball(bike,'#25282e',side*.30,.94,.47,.057);rod(bike,'#303843',[side*.10,.86,-.21],[side*.29,.61,.15],.073);rod(bike,'#303843',[side*.29,.61,.15],[side*.28,.27,-.03],.064);box(bike,'#1e252d',side*.28,.26,.025,.13,.09,.25);}
  vehicles.push({g:bike,kind:'motorcycle',at:83,wheels:bikeWheels,emerged:false,escaped:false});
 
- // Three-storey silver/red hero, completely hidden until the detonation.
+ // Reuse geometry/materials for the stampede, with separate joints on each actor.
+ function cloneActor(source,at,index){const g=source.g.clone(true),map=new Map();function pair(a,b){map.set(a,b);a.children.forEach((child,i)=>pair(child,b.children[i]));}pair(source.g,g);scene.add(g);const o={...source,g,at,index,emerged:false,escaped:false};if(source.legs)o.legs=source.legs.map(l=>map.get(l));if(source.wheels)o.wheels=source.wheels.map(l=>map.get(l));if(source.head)o.head=map.get(source.head);if(source.tail)o.tail=map.get(source.tail);return o;}
+ for(const [kind,at]of[['zebra',18],['lion',28],['tiger',38]]){const source=animals.find(o=>o.kind===kind);source.index=0;for(let i=1;i<4;i++)animals.push(cloneActor(source,at+i*2.1,i));}animals.sort((a,b)=>a.at-b.at);
+ for(const [kind,at]of[['car',51],['motorcycle',65]]){const source=vehicles.find(o=>o.kind===kind);source.at=at;source.index=0;for(let i=1;i<6;i++)vehicles.push(cloneActor(source,at+i*1.65,i));}vehicles.sort((a,b)=>a.at-b.at);
+
+ // Three-storey soot-covered hero, completely hidden until the detonation.
  const hero=new T.Group();scene.add(hero);hero.visible=false;
- const silver=material('#bccbd0',.7),red=material('#a82e3e',.35),dark=material('#405260',.6);
+ const silver=material('#333539',.08),red=material('#493239',.06),dark=material('#13191e',.02);
  ball(hero,silver,0,.65,0,.95,1.42,.55);ball(hero,red,0,-.10,.01,.86,.51,.53);
  for(const side of[-1,1]){const chest=box(hero,red,side*.44,1.20,.47,.20,1.48,.08);chest.rotation.z=side*-.47;ball(hero,red,side*.97,1.32,0,.39,.43,.40);
-  rod(hero,silver,[side*.97,1.30,0],[side*1.38,.53,.31],.29);rod(hero,silver,[side*1.38,.53,.31],[side*1.39,1.51,.85],.25);
-  ball(hero,silver,side*1.39,1.67,.88,.31,.39,.23);for(let i=0;i<4;i++)ball(hero,silver,side*(1.15+i*.15),1.89,.99,.078,.25,.083);
+  rod(hero,silver,[side*.97,1.30,0],[side*1.37,2.43,.06],.29);rod(hero,silver,[side*1.37,2.43,.06],[side*1.42,3.35,.13],.25);
+  ball(hero,silver,side*1.42,3.57,.14,.31,.39,.23);for(let i=0;i<4;i++)ball(hero,silver,side*(1.18+i*.15),3.87,.20,.078,.25,.083);
   rod(hero,silver,[side*.44,-.32,0],[side*.53,-1.65,0],.35);rod(hero,red,[side*.53,-1.65,0],[side*.62,-2.84,.12],.30);ball(hero,red,side*.62,-2.96,.36,.34,.21,.62);
  }
  const heroHead=new T.Group();heroHead.position.set(0,2.62,0);hero.add(heroHead);ball(heroHead,silver,0,0,0,.72,.92,.61);
  const crest=box(heroHead,silver,0,.72,-.03,.09,.84,.58);crest.rotation.x=.05;
- const eyeMat=new T.MeshStandardMaterial({color:'#fff3b4',emissive:'#ffd174',emissiveIntensity:.65,roughness:.3});
- for(const side of[-1,1]){const e=ball(heroHead,eyeMat,side*.32,.15,.51,.26,.32,.075);e.rotation.z=side*-.18;ball(heroHead,dark,side*.71,-.04,-.02,.075,.24,.16);}
- box(heroHead,dark,0,-.40,.55,.30,.056,.045);rod(heroHead,silver,[0,.04,.63],[0,-.23,.66],.054);
- const timer=ball(hero,new T.MeshStandardMaterial({color:'#8ee5f4',emissive:'#279de7',emissiveIntensity:1.2}),0,1.03,.56,.16,.21,.06);
- // The final face fills the display: use a smooth silhouette for that close-up.
+ const eyeMat=new T.MeshStandardMaterial({color:'#e9e1bf',emissive:'#d5c9a3',emissiveIntensity:.25,roughness:.7});
+ for(const side of[-1,1]){const e=ball(heroHead,eyeMat,side*.32,.15,.51,.27,.17,.075);e.rotation.z=side*-.10;ball(heroHead,dark,side*.71,-.04,-.02,.075,.24,.16);ball(heroHead,dark,side*.32,.18,.588,.043,.065,.009);rod(heroHead,dark,[side*.12,.42,.52],[side*.52,.31,.44],.035);ball(heroHead,silver,side*.32,.32,.515,.28,.09,.06);}
+ const mouthCurve=new T.CatmullRomCurve3([v(-.21,-.46,.54),v(0,-.37,.59),v(.21,-.46,.54)]);mesh(heroHead,new T.TubeGeometry(mouthCurve,16,.028,6,false),dark,0,0,0);rod(heroHead,silver,[0,.04,.63],[0,-.23,.66],.054);
+ const timer=ball(hero,new T.MeshStandardMaterial({color:'#ad5750',emissive:'#6e1714',emissiveIntensity:.35}),0,1.03,.56,.16,.21,.06);
+ // Keep the resigned face and raised hands readable during the upward launch.
  const closeSphere=new T.SphereGeometry(1,64,40);heroHead.traverse(o=>{if(o.isMesh&&o.geometry.type==='SphereGeometry')o.geometry=closeSphere;});
 
  const smokeMap=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d'),r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,'rgba(100,100,103,.9)');r.addColorStop(.6,'rgba(92,94,97,.55)');r.addColorStop(1,'rgba(70,73,80,0)');g.fillStyle=r;g.fillRect(0,0,64,64);return new T.CanvasTexture(c);})();
  const smoke=Array.from({length:18},(_,i)=>{const s=new T.Sprite(new T.SpriteMaterial({map:smokeMap,transparent:true,depthWrite:false,opacity:0}));scene.add(s);s.visible=false;return {g:s,i};});
 
  function reset(level){stage=level;clock=progress=0;blastAge=-1;running=false;events.length=0;hero.visible=soot.g.visible=false;hero.userData.passed=false;smoke.forEach(o=>o.g.visible=false);
-  for(const o of customers){o.flee=o.escaped=o.emerged=o.knocked=false;o.blastAge=-1;o.g.visible=o.stage===stage&&o.index<6;o.g.position.copy(o.home);o.g.rotation.set(0,0,0);o.arms.forEach(a=>a.rotation.set(0,0,0));o.legs.forEach(l=>l.rotation.set(0,0,0));}
+  for(const o of customers){o.flee=o.escaped=o.emerged=o.knocked=o.startedRun=false;o.blastAge=-1;o.g.visible=o.stage===stage&&(stage===1||o.index<6);o.g.position.copy(o.home);o.g.rotation.set(0,o.idleYaw||0,0);o.arms.forEach(a=>a.rotation.set(0,0,0));o.legs.forEach(l=>l.rotation.set(0,0,0));}
   for(const o of [...animals,...vehicles]){o.g.visible=false;o.g.position.set(0,.28,-1.5);o.g.rotation.set(0,0,0);o.emerged=o.escaped=false;}
  }
  function charge(value){progress=Math.max(progress,value);}
  function log(kind,index){events.push({kind,index,progress});}
  function runPose(o,age,slow=false){const pace=age*(slow?13:23)+(o.index||0);o.g.rotation.x=slow?.14:-.13;o.g.rotation.z=Math.sin(pace*.5)*(slow?.035:.07);o.legs.forEach((l,i)=>l.rotation.x=Math.sin(pace+i*Math.PI)*(slow?.24:.76));o.arms.forEach((a,i)=>{a.rotation.x=Math.sin(pace+i*Math.PI)*(slow?.18:.72);a.rotation.z=(i?1:-1)*(slow?.12:.32);});}
- function people(){for(const o of customers){if(o.stage!==stage||o.knocked)continue;const granny=!!o.isGrandma,at=stage===0?(granny?64+(o.index-15)*5:3+o.index*3.6):2+o.index*2,age=(clock-at)/11;
-   if(age<0)continue;o.flee=true;o.elapsed=age;o.g.visible=true;const exit=v(stage===0?.38:0,.28,1.72),side=o.index%2?1:-1;
-   let a,b,u;if(age<(granny?.66:.35)){a=o.home;b=exit;u=age/(granny?.66:.35);}else{if(!o.emerged){o.emerged=true;log(granny?'grandma':'customer',o.index);}a=exit;b=v(side*(granny?3.3:10),.13,granny?3.6:4.1);u=clamp((age-(granny?.66:.35))/(granny?6.5:1.45));}
+ function people(){for(const o of customers){if(o.stage!==stage||o.knocked)continue;const granny=!!o.isGrandma,exit=v(stage===0?.38:0,.28,1.72),side=o.index%2?1:-1,outside=v(side*(granny?3.3:10),.13,granny?3.6:4.1),insideDistance=o.home.distanceTo(exit),slowSpeed=.68;
+   const at=stage===0?(granny?72+(o.index-15)*4-insideDistance/slowSpeed*11:3+o.index*3.6):2+o.index*(stage===1?1.5:2),age=(clock-at)/11;
+   if(age<0)continue;o.startedRun=o.flee=true;o.elapsed=age;o.g.visible=true;
+   const doorTime=granny?insideDistance/slowSpeed:.35,outsideTime=granny?exit.distanceTo(outside)/slowSpeed:1.45;
+   let a,b,u;if(age<doorTime){a=o.home;b=exit;u=age/doorTime;}else{if(!o.emerged){o.emerged=true;log(granny?'grandma':'customer',o.index);}a=exit;b=outside;u=clamp((age-doorTime)/outsideTime);}
    o.g.position.copy(a).lerp(b,u);o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);runPose(o,age,granny);o.g.position.y+=Math.abs(Math.sin(age*(granny?13:23)))*(granny?.018:.055);
    if(!granny&&age>1.80){o.escaped=true;o.g.visible=false;}
   }}
- function pests(t){if(stage!==1)return;for(const o of critters){const at=o.kind==='roach'?26+o.index*.65:o.kind==='rat'?46+o.index*1.1:63+o.index*.55,age=(clock-at)/12;o.elapsed=age;if(age<0||o.escaped)continue;
+ function pests(t){if(stage!==1)return;for(const o of critters){const at=o.kind==='rat'?41+o.index*.32:45+o.index*(o.kind==='roach'?.22:.09),age=(clock-at)/18;o.elapsed=age;if(age<0||o.escaped)continue;
    o.g.visible=true;const side=o.index%2?1:-1,exit=v((o.index%3-1)*.18,.25,1.72),safe=v(side*(8.5+o.index%4),.11,3.7+(o.index%5)*.19);let a,b,u;
-   if(age<.25){a=o.home;b=exit;u=age/.25;}else{a=exit;b=safe;u=clamp((age-.25)/1.6);if(!o.emerged){o.emerged=true;log(o.kind,o.index);}}
+   if(age<.14){a=o.home;b=exit;u=age/.14;}else{a=exit;b=safe;u=clamp((age-.14)/.80);if(!o.emerged){o.emerged=true;log(o.kind,o.index);}}
    o.g.position.copy(a).lerp(b,u);o.g.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);o.legs.forEach((l,i)=>l.rotation.z=o.legHomes[i].z+Math.sin(t*34+i*Math.PI+o.index)*.25);
-   if(age>1.85){o.escaped=true;o.g.visible=false;}
+   if(age>.94){o.escaped=true;o.g.visible=false;}
   }}
- function surprises(t){if(stage!==2)return;for(const [i,o]of [...animals,...vehicles].entries()){const age=(clock-o.at)/10;if(age<0)continue;o.g.visible=true;const exit=v(0,.28,2.35),side=i%2?-1:1,safe=v(side*10,.13,4.35+(i%2)*.3);let a,b,u;
-   if(age<.32){a=v(0,.28,-1.25);b=exit;u=age/.32;}else{a=exit;b=safe;u=clamp((age-.32)/2.1);if(!o.emerged){o.emerged=true;log(o.kind,i);}}
-   o.g.position.copy(a).lerp(b,u);const direction=Math.atan2(b.x-a.x,b.z-a.z);o.g.rotation.y=age<.32?0:direction*clamp((age-.32)/.32);
-   if(o.legs){o.legs.forEach((l,j)=>l.rotation.x=Math.sin(age*20+(j%2)*Math.PI+(j>1?Math.PI:0))*.67);o.g.position.y+=Math.abs(Math.sin(age*20))*.045;o.head.rotation.z=Math.sin(t*8)*.05;o.tail.rotation.y=Math.sin(t*14)*.3;}
-   else{o.wheels.forEach(w=>w.rotation.x=-age*19);o.g.rotation.z=Math.sin(age*13)*(o.kind==='motorcycle'?.15:.018);}
-   if(age>2.42){o.escaped=true;o.g.visible=false;}
+ function surprises(t){if(stage!==2)return;for(const [i,o]of [...animals,...vehicles].entries()){const age=(clock-o.at)/18;if(age<0)continue;o.g.visible=true;const side=i%2?-1:1,lane=o.legs?0:(o.index%2)*.16,exit=v((o.index%2?1:-1)*.14,.28,1.78),road=v(0,.13,5.20+lane),turn=v(side*1.8,.13,5.65+lane),safe=v(side*12,.13,5.65+lane);let a,b,u;
+   if(age<.16){a=v(exit.x,.28,-1.25);b=exit;u=age/.16;}else if(age<.36){a=exit;b=road;u=(age-.16)/.20;}else if(age<.54){a=road;b=turn;u=(age-.36)/.18;}else{a=turn;b=safe;u=clamp((age-.54)/.72);}
+   if(age>=.16&&!o.emerged){o.emerged=true;log(o.kind,i);}
+   o.g.position.copy(a).lerp(b,u);const direction=Math.atan2(b.x-a.x,b.z-a.z);o.g.rotation.y=direction;
+   if(o.legs){o.legs.forEach((l,j)=>l.rotation.x=Math.sin(age*38+(j%2)*Math.PI+(j>1?Math.PI:0))*.90);o.g.position.y+=Math.abs(Math.sin(age*38))*.10;o.head.rotation.z=Math.sin(t*13)*.07;o.head.rotation.x=-.11;o.tail.rotation.y=Math.sin(t*24)*.5;}
+   else{o.wheels.forEach(w=>w.rotation.x=-age*38);o.g.rotation.z=age>.36&&age<.54?side*(o.kind==='motorcycle'?.23:.035):Math.sin(age*24)*.015;}
+   if(age>1.26){o.escaped=true;o.g.visible=false;}
   }}
  function upstairs(dt,t){if(stage!==1)return;for(const [i,o]of occupants.filter(o=>o.stage===1).entries()){o.g.visible=true;const a=t*4.3+i*Math.PI,dx=Math.sin(a)*.36,dz=Math.cos(a)*.63;o.g.position.set(o.home.x+dx,o.home.y+Math.abs(Math.sin(t*22))*.05,.64+dz);o.g.rotation.y=Math.atan2(Math.cos(a)*.36,-Math.sin(a)*.63);runPose(o,t+i);o.arms.forEach((arm,j)=>arm.rotation.z=(j?1:-1)*(1.6+Math.sin(t*18)*.5));}}
  function detonate(){clock=100;people();pests(0);surprises(0);blastAge=0;running=false;
@@ -141,7 +149,7 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
   if(stage===1){soot.g.position.set(0,.21,2.50);soot.g.rotation.set(0,.30,0);smoke.forEach(o=>o.g.visible=true);critters.forEach(o=>o.g.visible=false);}
   if(stage===2){hero.visible=true;hero.position.set(0,3.40,-.1);hero.rotation.set(0,0,0);log('giant-reveal',0);}
  }
- function update(dt,t,active){running=active;if(blastAge<0){if(!active||progress<=0)return;clock+=(progress-clock)*Math.min(1,dt*18);people();pests(t);surprises(t);upstairs(dt,t);return;}
+ function update(dt,t,active){running=active;if(blastAge<0){if(stage===1)for(const o of customers.filter(o=>o.stage===1&&!o.startedRun)){o.g.rotation.y=o.idleYaw+Math.sin(t*.7+o.index)*.10;o.arms.forEach((a,i)=>a.rotation.x=(o.index%3===i?-.45:0)+Math.sin(t+o.index)*.04);}if(!active||progress<=0)return;clock+=(progress-clock)*Math.min(1,dt*18);people();pests(t);surprises(t);upstairs(dt,t);return;}
   if(!active)return;blastAge+=dt;
   if(stage===0)for(const o of customers.filter(o=>o.knocked)){const a=blastAge,side=o.index%2?1:-1;o.blastAge=a;o.g.position.copy(o.blastHome).add(v(side*Math.min(a,1)*1.1,Math.max(0,1.9*a-3.5*a*a),Math.min(a,1)*.9));o.g.position.y=Math.max(.16,o.g.position.y);o.g.rotation.set(-Math.min(1.38,a*2.8),o.blastTurn,side*Math.min(.40,a*.8));o.arms.forEach((arm,i)=>arm.rotation.z=(i?1:-1)*(1.1+Math.sin(a*18)*.3));o.legs.forEach((l,i)=>l.rotation.x=a<1?Math.sin(a*19+i*Math.PI)*.6:.1);}
   if(stage===1){soot.g.visible=blastAge>.90;soot.head.rotation.y=Math.sin(Math.max(0,blastAge-1.8)*3)*.12;soot.arms.forEach((a,i)=>a.rotation.z=(i?1:-1)*(.10+Math.sin(t*4)*.015));soot.g.rotation.z=Math.sin(t*5)*.012;
@@ -152,15 +160,11 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
   if(stage===0){const u=clamp(blastAge/.55),look=camera.getWorldDirection(v()).multiplyScalar(10).add(camera.position).lerp(v(0,.85,1.95),u);camera.lookAt(look);}
   if(stage===1){const u=clamp((blastAge-1.0)/1.2);camera.position.lerp(v(3.2,2.3,7.5),u*.85);const old=camera.getWorldDirection(v()).multiplyScalar(10).add(camera.position),look=old.lerp(v(0,.92,2.5),u);camera.lookAt(look);soot.g.rotation.y=Math.atan2(camera.position.x-soot.g.position.x,camera.position.z-soot.g.position.z);}
   if(stage===2){
-   const forward=camera.getWorldDirection(v()),up=v(0,1,0).applyQuaternion(camera.quaternion),right=v(1,0,0).applyQuaternion(camera.quaternion);
-   const near=camera.position.clone().addScaledVector(forward,2.25).addScaledVector(up,-2.62);
-   // Keep accelerating through the lens plane; the close-up is a passing moment.
-   const u=clamp((blastAge-.48)/1.38),rush=u*u;
-   hero.position.copy(v(0,3.4,-.1)).lerp(near,rush);hero.quaternion.copy(camera.quaternion);
-   hero.rotateZ(Math.sin(blastAge*5)*.16*(1-rush));
-   if(blastAge>1.86){const pass=clamp((blastAge-1.86)/.58);hero.position.addScaledVector(forward,-4.4*pass).addScaledVector(right,5*pass*pass).addScaledVector(up,1.1*pass);hero.rotateZ(-pass*.8);hero.rotateX(pass*.35);}
-   if(blastAge>=2.44){hero.visible=false;if(!hero.userData.passed){hero.userData.passed=true;log('giant-flew-past',0);}}
-   timer.material.emissiveIntensity=1+Math.sin(blastAge*18)*.5;
+   // Let the blast clear first, then accelerate upward without approaching the camera.
+   const rise=blastAge*.25+8*Math.max(0,blastAge-1.45)**2;
+   hero.position.set(0,3.4+rise,.4);hero.rotation.set(0,Math.atan2(camera.position.x,camera.position.z-.4),Math.sin(blastAge*8)*.035);
+   if(blastAge>=3.0){hero.visible=false;if(!hero.userData.passed){hero.userData.passed=true;log('giant-flew-up',0);}}
+   timer.material.emissiveIntensity=.35;
   }
  }
  return {reset,charge,detonate,update,present,animals,vehicles,hero,soot,events,get progress(){return clock;},get blastAge(){return blastAge;},get duration(){return [2700,4100,3600][stage];}};
