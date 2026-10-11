@@ -1,4 +1,4 @@
-import {T,build} from './world.js?v=rock-29';
+import {T,build} from './world.js?v=rock-30';
 import {Sound} from './audio.js?v=rock-28';
 import {CATALOG as catalog,LEVELS,calculate} from './rules.js?v=rock-26';
 await Promise.race([document.fonts.load('700 210px UnifrakturCook').catch(()=>{}),new Promise(resolve=>setTimeout(resolve,2200))]);

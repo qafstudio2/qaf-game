@@ -1,6 +1,6 @@
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.min.js';
 export {T};
-import {makeGrandma,buildEscapeShow} from './escape-show.js?v=rock-29';
+import {makeGrandma,buildEscapeShow} from './escape-show.js?v=rock-30';
 const mat=(color,roughness=.6,metalness=0)=>new T.MeshStandardMaterial({color,roughness,metalness});
 function mesh(parent,geometry,material,x=0,y=0,z=0){const m=new T.Mesh(geometry,material);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
 const box=(p,w,h,d,m,x=0,y=0,z=0)=>mesh(p,new T.BoxGeometry(w,h,d),m,x,y,z);

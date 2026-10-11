@@ -109,7 +109,7 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
  const smokeMap=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d'),r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,'rgba(100,100,103,.9)');r.addColorStop(.6,'rgba(92,94,97,.55)');r.addColorStop(1,'rgba(70,73,80,0)');g.fillStyle=r;g.fillRect(0,0,64,64);return new T.CanvasTexture(c);})();
  const smoke=Array.from({length:18},(_,i)=>{const s=new T.Sprite(new T.SpriteMaterial({map:smokeMap,transparent:true,depthWrite:false,opacity:0}));scene.add(s);s.visible=false;return {g:s,i};});
 
- function reset(level){stage=level;clock=progress=0;blastAge=-1;running=false;events.length=0;hero.visible=soot.g.visible=false;smoke.forEach(o=>o.g.visible=false);
+ function reset(level){stage=level;clock=progress=0;blastAge=-1;running=false;events.length=0;hero.visible=soot.g.visible=false;hero.userData.passed=false;smoke.forEach(o=>o.g.visible=false);
   for(const o of customers){o.flee=o.escaped=o.emerged=o.knocked=false;o.blastAge=-1;o.g.visible=o.stage===stage&&o.index<6;o.g.position.copy(o.home);o.g.rotation.set(0,0,0);o.arms.forEach(a=>a.rotation.set(0,0,0));o.legs.forEach(l=>l.rotation.set(0,0,0));}
   for(const o of [...animals,...vehicles]){o.g.visible=false;o.g.position.set(0,.28,-1.5);o.g.rotation.set(0,0,0);o.emerged=o.escaped=false;}
  }
@@ -151,7 +151,17 @@ export function buildEscapeShow(T,scene,customers,occupants,critters){
  function present(camera){if(blastAge<0)return;
   if(stage===0){const u=clamp(blastAge/.55),look=camera.getWorldDirection(v()).multiplyScalar(10).add(camera.position).lerp(v(0,.85,1.95),u);camera.lookAt(look);}
   if(stage===1){const u=clamp((blastAge-1.0)/1.2);camera.position.lerp(v(3.2,2.3,7.5),u*.85);const old=camera.getWorldDirection(v()).multiplyScalar(10).add(camera.position),look=old.lerp(v(0,.92,2.5),u);camera.lookAt(look);soot.g.rotation.y=Math.atan2(camera.position.x-soot.g.position.x,camera.position.z-soot.g.position.z);}
-  if(stage===2){const u=clamp((blastAge-.48)/2.20),rush=u*u*(3-2*u),forward=camera.getWorldDirection(v()),up=v(0,1,0).applyQuaternion(camera.quaternion),near=camera.position.clone().addScaledVector(forward,2.25).addScaledVector(up,-2.62);hero.position.copy(v(0,3.4,-.1)).lerp(near,rush);hero.quaternion.copy(camera.quaternion);hero.rotateZ(Math.sin(blastAge*5)*.16*(1-rush));timer.material.emissiveIntensity=1+Math.sin(blastAge*18)*.5;}
+  if(stage===2){
+   const forward=camera.getWorldDirection(v()),up=v(0,1,0).applyQuaternion(camera.quaternion),right=v(1,0,0).applyQuaternion(camera.quaternion);
+   const near=camera.position.clone().addScaledVector(forward,2.25).addScaledVector(up,-2.62);
+   // Keep accelerating through the lens plane; the close-up is a passing moment.
+   const u=clamp((blastAge-.48)/1.38),rush=u*u;
+   hero.position.copy(v(0,3.4,-.1)).lerp(near,rush);hero.quaternion.copy(camera.quaternion);
+   hero.rotateZ(Math.sin(blastAge*5)*.16*(1-rush));
+   if(blastAge>1.86){const pass=clamp((blastAge-1.86)/.58);hero.position.addScaledVector(forward,-4.4*pass).addScaledVector(right,5*pass*pass).addScaledVector(up,1.1*pass);hero.rotateZ(-pass*.8);hero.rotateX(pass*.35);}
+   if(blastAge>=2.44){hero.visible=false;if(!hero.userData.passed){hero.userData.passed=true;log('giant-flew-past',0);}}
+   timer.material.emissiveIntensity=1+Math.sin(blastAge*18)*.5;
+  }
  }
  return {reset,charge,detonate,update,present,animals,vehicles,hero,soot,events,get progress(){return clock;},get blastAge(){return blastAge;},get duration(){return [2700,4100,3600][stage];}};
 }
