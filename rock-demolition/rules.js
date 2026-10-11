@@ -16,7 +16,7 @@ export const CATALOG=[
  {id:'metalarea',name:'METAL AREA',model:'MELT / DS-03',color:'#555c6b',cost:1500,tier:2,energy:1050,family:'drive',label:'METAL',description:'終極破音，緊實低音與劇烈的削波音牆。'},
  {id:'dirtyrat',name:'DIRTY RAT',model:'FILTH / F-04',color:'#797a69',cost:1600,tier:2,energy:900,family:'fuzz',label:'FILTH',description:'終極髒音。和 METAL AREA、BOMBOOST 組合有額外能量。'},
  {id:'bomboost',name:'BOMBOOST',model:'BLAST / B-03',color:'#d35347',cost:1300,tier:2,energy:850,family:'boost',label:'BLAST',description:'終極強化，壓縮、推升與爆破連鎖。'},
- {id:'octave',name:'OCTAVE',model:'THUNDER / O-01',color:'#8c78b4',cost:850,tier:2,energy:560,family:'octave',label:'OCTAVE',description:'追加低八度真實吉他採樣，音浪向地面擴散。'},
+ {id:'octave',name:'OCTAVE',model:'THUNDER / O-01',color:'#8c78b4',cost:850,tier:2,energy:560,family:'octave',label:'OCTAVE',description:'疊加低八度音浪，音浪向地面擴散。'},
  {id:'wah',name:'FIRE WAH',model:'SWEEP / W-01',color:'#76ab93',cost:650,tier:2,energy:430,family:'wah',label:'SWEEP',description:'自動 Wah 掃頻，Solo 更有咬勁，火勢向上竄。'},
  {id:'feedback',name:'FEEDBACK',model:'CHAOS / FB-01',color:'#c783a9',cost:900,tier:2,energy:610,family:'feedback',label:'CHAOS',description:'受控回授與長尾追擊，拆除現場更混亂。'}
 ];
