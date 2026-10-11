@@ -17,7 +17,7 @@ No pitch or tempo changes. Original artwork and unnecessary metadata removed.
 Decoded peak 0.7601; seam sample jump 0.000347; no silent padding.
 
 Playback: one decoded Web Audio buffer, sample-accurate loop, quiet independent gain.
-Keep approved voice, punch and yelp timbres/EQ/levels. No music on the intro screen.
+Keep approved voice, punch and yelp timbres/EQ/levels. Play BGM on the intro screen as soon as it is ready; when autoplay is blocked, unlock on the first gesture. The startup bar tracks download/decode completion. Continue the same loop into gameplay.
 Stop on sound OFF, 999-punch completion, avatar menu, replay, exit, pagehide and background/blur.
 After returning to the foreground, resume on a new game interaction; never replay old effects.
 Pending download/decode completion cannot resurrect a stopped loop. Music failure never blocks play.

@@ -2,9 +2,10 @@
 
 // One decoded buffer and one source per game, independent of the speech/SFX EQ.
 class AIIBackgroundMusic {
-  constructor(context, output) {
+  constructor(context, output, assets) {
     this.context = context;
     this.output = output;
+    this.assets = assets;
     this.buffer = null;
     this.loading = null;
     this.source = null;
@@ -17,9 +18,7 @@ class AIIBackgroundMusic {
     if (this.buffer) return Promise.resolve(this.buffer);
     if (!this.loading) {
       this.loading = (async () => {
-        const response = await fetch('audio/boxing-loop.mp3?v=suno-1');
-        if (!response.ok) throw new Error('Music ' + response.status);
-        this.buffer = await this.context.decodeAudioData(await response.arrayBuffer());
+        this.buffer = await this.assets.audio(this.context, 'audio/boxing-loop.mp3?v=suno-1');
         return this.buffer;
       })().finally(() => { this.loading = null; });
     }

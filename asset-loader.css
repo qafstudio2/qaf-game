@@ -1,0 +1,9 @@
+.asset-loading{width:100%;margin:12px 0;text-align:left;color:#58665f;font:600 11px/1.4 system-ui,"Microsoft JhengHei",sans-serif}
+.asset-status{display:flex;align-items:center;justify-content:space-between;gap:5px;min-height:23px;white-space:nowrap}
+.asset-status button{width:auto!important;min-height:0!important;margin:0!important;padding:3px 0 3px 5px!important;border:0!important;box-shadow:none!important;background:transparent!important;font:600 11px/1.4 system-ui!important;color:#526a5c!important;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.asset-status button[hidden]{display:none!important}
+.asset-track{height:6px;overflow:hidden;border-radius:8px;background:#ded9cd}
+.asset-track i{display:block;height:100%;width:0;border-radius:inherit;background:#6f9781;transition:width .12s linear}
+#start:disabled{cursor:wait;opacity:.65}
+#intro article{max-height:100%;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+@media(max-height:650px){.asset-loading{margin:7px 0}.asset-status{min-height:20px}}
