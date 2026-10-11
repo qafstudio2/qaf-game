@@ -14,3 +14,14 @@
 button:disabled{opacity:.62}
 h1 span{color:#65715f}
 @media(max-height:620px){#scene{bottom:234px}#hud{bottom:116px;min-height:105px}.game-logo{bottom:248px}}
+
+/* Keep the stage and controls separate in short landscape browsers. */
+.credits{display:block;font-size:10px;color:#617562;margin-top:7px}
+@media(min-width:900px) and (min-height:601px){main{max-width:760px}#scene{bottom:240px}#hud{bottom:133px;min-height:98px}.game-logo{bottom:253px}#controls button{min-height:44px}header{left:24px;right:24px}}
+@media(orientation:landscape) and (max-height:600px) and (min-width:580px){
+ main{max-width:none}header{top:8px;left:12px;right:calc(36% + 12px)}header nav{flex-direction:row;gap:5px}header h1{font-size:20px;margin:2px 0}header h1 span{font-size:10px;margin-top:3px}.eyebrow{font-size:8px;letter-spacing:1px}
+ #scene{inset:66px 36% 17px 0}#speech{top:68px;left:12px;right:calc(36% + 12px);padding:5px 8px;font-size:11px;max-height:44px;overflow:hidden;background:#fffaedee}
+ #hud{left:calc(64% + 10px);right:10px;top:13px;bottom:auto;min-height:0;padding:0}#metric{font-size:11px;line-height:1.35}.meter-top{align-items:flex-start}#cash{font-size:10px}#range,#instruction{font-size:11px;margin-top:5px;line-height:1.45}#gauge{margin-top:7px;height:10px}#safe-zone{height:10px}#marker{height:16px}
+ #controls{left:calc(64% + 10px);right:10px;bottom:max(17px,env(safe-area-inset-bottom))}#controls button{font-size:11px;min-height:40px;padding:7px 4px}.tool-row{gap:5px}.tool-row+.tool-row{margin-top:6px}.game-logo{right:calc(36% + 9px);bottom:24px;width:40px}.footnote{width:64%;bottom:4px;font-size:8px}
+ .overlay{overflow:auto;padding:12px;display:block}.overlay article{margin:auto;max-width:520px;padding:14px}.menu-logo{width:70px;height:40px;margin-bottom:3px}article h2{font-size:23px;line-height:1.15;margin:5px 0}article h2 br{display:none}article p{font-size:11px;margin:5px 0;line-height:1.45}.steps{margin:5px 0}article button{min-height:40px;padding:7px;margin-top:8px}.home{padding:4px 10px}.credits{display:inline-block;margin:0 8px}.play-count{display:inline-block}article small{margin-top:3px}
+}

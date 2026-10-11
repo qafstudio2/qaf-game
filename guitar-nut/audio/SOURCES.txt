@@ -1,0 +1,18 @@
+修理上弦枕｜音訊來源與製作記錄（2026-10-11）
+
+背景配樂：使用者提供的 Suno 錄音，檔名「修理上弦枕Workshop Instrumental, 90 Bpm. Warm Mellow Electric Piano,....mp3」。
+來源：https://drive.google.com/file/d/1uVwJ2lWo67D7epCYQ5ceOf9AOGJJ5bOD/view
+使用者已授權用於遊戲及公開上線。本次確認沿用這版背景，吉他與慶祝樂句配合其 C 大調，不強制改為原交接的 E 小調。
+workshop-loop.mp3：90 BPM、六個 4/4 小節、16.000 秒、立體聲 MP3 128 kbps、257087 bytes。只在循環接點作 35 ms 預留音訊銜接，沒有整段淡入淡出。保留原曲音色；調整平均音量，移除封面與多餘標籤。
+
+獨立吉他音源：FluidR3 GM，Frank Wen 及 Fluid Soundfont contributors；由 Benjamin Gleitzman / MIDI.js Soundfonts 轉製之樂器取樣。
+來源：https://github.com/gleitz/midi-js-soundfonts
+音源：https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/
+授權：Creative Commons Attribution 3.0 https://creativecommons.org/licenses/by/3.0/
+樂器：acoustic_guitar_steel、electric_guitar_clean、electric_guitar_jazz。
+處理：擷取每種樂器 E2/B2/E3/G3/B3/E4/G4/B4；截為 1.1 秒，末端 0.1 秒平順收尾，96 kbps 單聲道 MP3；於遊戲按實際音高、音量與音符時值觸發。各取樣不是 Suno 背景分離或單次撥弦素材。電／木／爵士分開音源。
+
+五段客人演奏：QAF 原創短樂句，約 5.88 秒。由 phrases.js 的共同譜面驅動聲音、撥弦、左手指法和換和弦位置。三關隨機選取且不重複，每張委託修前與修後保留同一樂句。
+弦槽太高：較硬、悶、延音短；太低：850 Hz 中頻 -14 dB、低頻支撐減弱、延音受阻與打品雜音；修好：完整音源自然演奏。這些是遊戲聽感設計，並非物理維修模擬。
+背景正常增益 0.12；說話與試彈期間降到 0.025。背景與吉他、客人語音使用不同播放來源。
+既有男／女語音、磨槽、工具聲保留。完成接單的原創短慶祝樂句配合 C 大調。
