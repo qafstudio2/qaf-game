@@ -1,4 +1,4 @@
-import {T} from './models.js?v=ankle-13';
+import {T} from './models.js?v=ankle-14';
 const clamp=T.MathUtils.clamp;
 function puffTexture(){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');const g=x.createRadialGradient(64,64,2,64,64,63);g.addColorStop(0,'rgba(255,255,255,.8)');g.addColorStop(.28,'rgba(255,255,255,.55)');g.addColorStop(.7,'rgba(255,255,255,.2)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,128,128);return new T.CanvasTexture(c);}
 export class Finale{
