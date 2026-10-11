@@ -2,7 +2,44 @@
 export class Sound{
  constructor(){this.enabled=true;this.nodes=new Set();this.buffers={};this.events=[];this.serial=0;this.clock=null;this.config=[];this.mode='off';this.trim={};this.music=null;}
  async unlock(){if(!this.ctx){const c=this.ctx=new(window.AudioContext||window.webkitAudioContext)();this.master=c.createGain();this.master.gain.value=.63;const hp=c.createBiquadFilter();hp.type='highpass';hp.frequency.value=65;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=6700;const comp=c.createDynamicsCompressor();comp.threshold.value=-12;comp.knee.value=8;comp.ratio.value=3;comp.attack.value=.006;comp.release.value=.13;this.analyser=c.createAnalyser();this.analyser.fftSize=1024;this.master.connect(hp).connect(lp).connect(comp).connect(this.analyser).connect(c.destination);this.guitar=c.createGain();this.octave=c.createGain();this.octave.gain.value=0;this.drums=c.createGain();this.drums.gain.value=.66;this.drums.connect(this.master);this.lead=c.createGain();this.lead.gain.value=.42;const leadHP=c.createBiquadFilter(),leadLP=c.createBiquadFilter(),leadComp=c.createDynamicsCompressor();leadHP.type='highpass';leadHP.frequency.value=380;leadLP.type='lowpass';leadLP.frequency.value=4300;leadComp.threshold.value=-22;leadComp.ratio.value=3;leadComp.attack.value=.008;leadComp.release.value=.09;this.lead.connect(leadHP).connect(leadLP).connect(leadComp).connect(this.master);const b=c.createBuffer(1,1,c.sampleRate),s=c.createBufferSource();s.buffer=b;s.connect(this.master);s.start();}await this.ctx.resume();}
- async preload(onProgress=()=>{}){await this.unlock();if(!this.music){const r=await fetch(new URL('./music/manifest.json?v=rock-22',import.meta.url));if(!r.ok)throw Error('Missing music manifest');this.music=await r.json();}const tracks=[...this.music.stages.flatMap(s=>s.tracks),...['kick','snare','hh','crash','tom-high','tom-mid','tom-low'].map(name=>({file:name+'.wav',legacy:true}))],report=()=>onProgress({loaded:tracks.filter(t=>this.buffers[t.file]).length,total:tracks.length});report();if(!this.ready)this.ready=Promise.all(tracks.map(async track=>{if(this.buffers[track.file])return;const r=await fetch(new URL((track.legacy?'../ankle-breaker/samples/':'./music/')+track.file+'?v=rock-23',import.meta.url));if(!r.ok)throw Error('Missing stem '+track.file);this.buffers[track.file]=await this.ctx.decodeAudioData(await r.arrayBuffer());report();})).catch(e=>{this.ready=null;throw e;});await this.ready;this.route(this.config);report();}
+ async keepLoading(operation){
+  let attempt=0;
+  for(;;){try{return await operation(attempt);}catch(e){attempt++;await new Promise(resolve=>setTimeout(resolve,Math.min(10000,1000*2**Math.min(attempt,4))));}}
+ }
+ async loadManifest(){
+  if(this.music)return this.music;
+  if(!this.manifestLoading)this.manifestLoading=this.keepLoading(async attempt=>{const r=await fetch(new URL('./music/manifest.json?v=rock-22',import.meta.url),{cache:attempt?'reload':'default'});if(!r.ok)throw Error('Missing music manifest');const data=await r.json();if(!Array.isArray(data.stages)||data.stages.length!==3)throw Error('Invalid music manifest');this.music=data;return data;}).finally(()=>{this.manifestLoading=null;});
+  return this.manifestLoading;
+ }
+ stageTracks(stage){return [...this.music.stages[stage].tracks,...['kick','snare','hh'].map(name=>({file:name+'.wav',legacy:true}))];}
+ isStageReady(stage){return !!this.music&&this.stageTracks(stage).every(t=>this.buffers[t.file]);}
+ reportLoading(){for(const report of this.progressListeners||[])report();}
+ async loadTrack(track){
+  if(this.buffers[track.file])return;
+  this.trackLoading??=new Map();this.trackProgress??=new Map();
+  if(!this.trackLoading.has(track.file)){
+   const pending=this.keepLoading(async attempt=>{
+    const r=await fetch(new URL((track.legacy?'../ankle-breaker/samples/':'./music/')+track.file+'?v=rock-23',import.meta.url),{cache:attempt?'reload':'default'});if(!r.ok)throw Error('Missing audio '+track.file);
+    let bytes;if(r.body){const reader=r.body.getReader(),chunks=[],total=Number(r.headers.get('content-length'));let received=0;for(;;){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.length;if(total>0){this.trackProgress.set(track.file,Math.min(.95,received/total*.95));this.reportLoading();}}bytes=new Uint8Array(received);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}}else bytes=new Uint8Array(await r.arrayBuffer());
+    this.buffers[track.file]=await this.ctx.decodeAudioData(bytes.buffer);this.trackProgress.delete(track.file);this.reportLoading();
+   }).finally(()=>this.trackLoading.delete(track.file));
+   this.trackLoading.set(track.file,pending);
+  }
+  return this.trackLoading.get(track.file);
+ }
+ async loadStage(stage,onProgress=()=>{}){
+  await this.loadManifest();const tracks=this.stageTracks(stage).filter(t=>!this.buffers[t.file]),total=tracks.length||1;let highWater=0;
+  const report=()=>{const loaded=tracks.filter(t=>this.buffers[t.file]).length;highWater=Math.max(highWater,tracks.length?tracks.reduce((sum,t)=>sum+(this.buffers[t.file]?1:this.trackProgress?.get(t.file)||0),0)/total:1);onProgress({loaded:tracks.length?loaded:1,total,progress:highWater});};
+  this.progressListeners??=new Set();this.progressListeners.add(report);report();
+  try{await Promise.all(tracks.map(track=>this.loadTrack(track)));report();}finally{this.progressListeners.delete(report);}
+ }
+ async preload(onProgress=()=>{}){await this.unlock();await this.loadStage(0,onProgress);this.route(this.config);}
+ preloadRemaining(){
+  if(this.backgroundLoading)return this.backgroundLoading;
+  // First-stage play starts before downloading the following stages. Foreground and background share each request.
+  this.backgroundLoading=(async()=>{for(let stage=1;stage<this.music.stages.length;stage++)await this.loadStage(stage);})().finally(()=>{this.backgroundLoading=null;});
+  return this.backgroundLoading;
+ }
  route(config){this.config=config.map(p=>({...p}));if(!this.ctx)return;this.guitar.disconnect();this.octave.disconnect();this.octave.gain.value=0;if(this.fxLFO){try{this.fxLFO.stop();}catch{}this.nodes.delete(this.fxLFO);this.fxLFO=null;}if(this.fx){for(const n of this.fx)try{n.disconnect();}catch{}}this.fx=[];const c=this.ctx;let head=this.guitar;const link=n=>{head.connect(n);this.fx.push(n);head=n;};for(const p of config){if(!p.on||p.amount<=0)continue;const a=p.amount/100,dirty=['fuzz','muff','dirtyrat'].includes(p.id),level=['metalarea','dirtyrat'].includes(p.id)?3:['distortion','muff'].includes(p.id)?2:1;
   if(['drive','distortion','metalarea','fuzz','muff','dirtyrat'].includes(p.id)){const pre=c.createGain(),shape=c.createWaveShaper(),tone=c.createBiquadFilter(),post=c.createGain();pre.gain.value=dirty?1.4+a*(3+level*2):.6+a*(1.5+level*1.2);const curve=new Float32Array(2048),k=dirty?4+a*(5+level*3):1.3+a*(2+level*1.5);for(let i=0;i<curve.length;i++){const x=i*2/(curve.length-1)-1;curve[i]=Math.tanh(x*k)/Math.tanh(k);}shape.curve=curve;shape.oversample='2x';tone.type='lowpass';tone.frequency.value=dirty?2800+a*1200:3900+a*1000;post.gain.value=dirty?.52:.60;link(pre);link(shape);link(tone);link(post);}
   if(p.id==='echo'){const input=c.createGain(),output=c.createGain(),delay=c.createDelay(1),feedback=c.createGain(),wet=c.createGain(),tone=c.createBiquadFilter();delay.delayTime.value=60/158*.75;feedback.gain.value=.15+a*.42;wet.gain.value=.04+a*.42;tone.type='lowpass';tone.frequency.value=2900;head.connect(input);input.connect(output);input.connect(delay);delay.connect(tone);tone.connect(wet).connect(output);tone.connect(feedback).connect(delay);this.fx.push(input,output,delay,feedback,wet,tone);head=output;}
