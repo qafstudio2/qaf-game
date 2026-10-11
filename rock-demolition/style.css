@@ -84,3 +84,21 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .board-meta{gap:5px}.board-meta .bench-tools{display:none}.board-meta .energy-panel{margin:0}.rack-header{gap:7px}.rack-header #reorder{width:28px;height:24px;min-width:28px;min-height:24px;padding:0;background:#ffffff08;color:var(--ink);border:1px solid #ffffff1c;border-radius:4px;font-size:15px;line-height:1;flex-shrink:0}.rack-header #reorder .swap-label{display:none}
 }
 @media(pointer:coarse) and (orientation:landscape) and (max-height:550px){.board-meta h1{font-size:10px}.board-meta{gap:4px}}
+/* Compact mobile pedal board: half-width display, full inventory touch targets. */
+@media(max-width:680px),(pointer:coarse) and (orientation:landscape) and (max-height:550px){
+ .board-group .board-shell{width:50%;min-width:168px;max-width:100%;margin-inline:auto;height:108px;padding:8px 6px}
+ .board-group #pedals{gap:5px}
+ .board-group .pedal,.board-group .empty-slot{height:90px;min-height:90px;padding:4px 1px 2px;border-bottom-width:4px}
+ .board-group .pedal strong{font-size:8px;line-height:1.15;letter-spacing:-.3px;margin:3px 0;min-height:12px;max-width:100%;overflow-wrap:anywhere}
+ .board-group .pedal .knobs{height:20px;gap:3px}
+ .board-group .pedal .knob{width:17px;height:17px;border-width:1px}
+ .board-group .pedal .knob:after{left:7px;height:5px}
+ .board-group .pedal .knob.small{width:12px;height:12px}
+ .board-group .pedal .knob.small:after{left:4px;height:4px}
+ .board-group .pedal .model,.board-group .pedal .knob-label,.board-group .board-jacks,.board-group .chain-label{display:none}
+ .board-group .pedal .led{margin:3px 0;width:5px;height:5px}
+ .board-group .pedal .footswitch{position:relative;flex-shrink:0;width:18px;height:18px}
+ .board-group .pedal .footswitch:after{content:'';position:absolute;width:40px;height:32px;left:50%;top:50%;transform:translate(-50%,-50%)}
+ .board-group .pedal .value{font-size:6px;margin-top:4px;white-space:nowrap}
+ .board-group .empty-slot span{font-size:22px}.board-group .empty-slot small{font-size:8px;line-height:1.25;white-space:normal}
+}
