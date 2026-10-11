@@ -1,4 +1,4 @@
-import {phrase} from './phrases.js?v=nut-8';
+import {phrase} from './phrases.js?v=nut-10';
 // FluidR3 sampled guitars are separate from the user's Suno workshop background.
 export class Sound{
  constructor(){this.enabled=true;this.sources=new Set();this.buffers={};this.samples={};this.token=0;this.until=0;this.bgWanted=false;this.duckUntil=0;this.menuMusicAllowed=QAFAssetLoader.mayAutoplay();this.assets=new QAFAssetLoader(document.getElementById("asset-progress"));}
@@ -6,13 +6,14 @@ export class Sound{
  async unlock(){this.ensureContext();this.assets.audioLocked(!this.menuMusicAllowed||this.ctx.state!=='running',this.enabled);if(this.ctx.state!=='running')await this.ctx.resume();this.assets.audioLocked(!this.menuMusicAllowed,this.enabled);return this.ctx;}
  async preload(){
  this.ensureContext();
- const url=name=>new URL('./audio/'+name,import.meta.url).href,background=url('workshop-loop.mp3?v=nut-8'),guitars=url('guitars.json?v=nut-8'),voices=['male','female'].flatMap(g=>['high','low','good'].map(k=>g+'-'+k));
- [background,guitars,...voices.map(key=>url(key+'.mp3?v=nut-7'))].forEach(u=>this.assets.add(u));
+ const url=name=>new URL('./audio/'+name,import.meta.url).href,background=url('workshop-loop.mp3?v=nut-8'),guitars=url('guitars.json?v=nut-8'),voice=this.initialVoice;
+ if(!voice)throw Error('Opening customer must be selected before preload');
+ [background,guitars,url(voice+'.mp3?v=nut-7')].forEach(u=>this.assets.add(u));
  this.assets.audioLocked(!this.menuMusicAllowed||this.ctx.state!=='running',this.enabled);
  if(!this.bgReady)this.bgReady=this.assets.audio(this.ctx,background).then(b=>{this.background=b;if(this.bgWanted)this.startBackground();return b;}).catch(e=>{this.bgReady=null;throw e;});
  if(!this.ready)this.ready=Promise.all([
  this.bgReady,
- ...voices.map(async key=>{this.buffers[key]=await this.assets.audio(this.ctx,url(key+'.mp3?v=nut-7'));}),
+ this.loadVoiceKey(voice),
  this.assets.json(guitars,async bank=>{await Promise.all(Object.entries(bank).flatMap(([name,notes])=>Object.entries(notes).map(async([midi,b64])=>{const raw=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));const buffer=await this.ctx.decodeAudioData(raw.buffer);const a=buffer.getChannelData(0);let sum=0;for(let i=0;i<Math.min(a.length,12000);i++)sum+=a[i]*a[i];const norm=Math.min(5,.16/Math.max(.01,Math.sqrt(sum/Math.min(a.length,12000))));(this.samples[name]??={})[midi]={buffer,norm};})));})
  ]).catch(e=>{this.ready=null;throw e;});
  return this.ready;
@@ -23,13 +24,15 @@ export class Sound{
  stop(){this.stopPerformance();this.bgWanted=false;if(this.bg){try{this.bg.stop();}catch{}this.bg.disconnect();this.bg=null;}}
  startBackground(){this.bgWanted=true;if(!this.enabled||!this.background||!this.ctx||this.ctx.state!=='running'||this.bg||document.hidden)return;const s=this.ctx.createBufferSource();s.buffer=this.background;s.loop=true;s.connect(this.bgGain);s.start();this.bg=s;}
  update(){if(this.ctx&&this.bgGain)this.bgGain.gain.setTargetAtTime(this.ctx.currentTime<this.duckUntil?.025:.12,this.ctx.currentTime,.10);}
- async voice(female,kind){const token=this.token;await this.preload();if(token!==this.token||!this.enabled||document.hidden)return 0;await this.unlock();const b=this.buffers[(female?'female':'male')+'-'+kind],s=this.track(this.ctx.createBufferSource()),gain=this.ctx.createGain();s.buffer=b;gain.gain.value=.62;s.connect(gain).connect(this.out);s.start();this.duckUntil=Math.max(this.duckUntil,this.ctx.currentTime+b.duration);return b.duration;}
+ async loadVoiceKey(key){this.ensureContext();if(!this.buffers[key])this.buffers[key]=await this.assets.audio(this.ctx,new URL('./audio/'+key+'.mp3?v=nut-7',import.meta.url).href);return this.buffers[key];}
+ loadVoice(female,kind){return this.loadVoiceKey((female?'female':'male')+'-'+kind);}
+ voice(female,kind,at=this.ctx.currentTime){const b=this.buffers[(female?'female':'male')+'-'+kind];if(!b||!this.enabled||document.hidden||this.ctx.state!=='running')return 0;const s=this.track(this.ctx.createBufferSource()),gain=this.ctx.createGain();s.buffer=b;gain.gain.value=.62;s.connect(gain).connect(this.out);s.start(at);this.duckUntil=Math.max(this.duckUntil,at+b.duration);return b.duration;}
  pluck(note,start,quality,type){const c=this.ctx,name=type===3?'steel':type===4?'jazz':'clean',samples=this.samples[name];if(!samples)return;const key=Object.keys(samples).map(Number).sort((a,b)=>Math.abs(a-note.midi)-Math.abs(b-note.midi))[0],sample=samples[key],s=this.track(c.createBufferSource()),gain=c.createGain(),filter=c.createBiquadFilter();s.buffer=sample.buffer;s.playbackRate.value=2**((note.midi-key)/12);const duration=quality==='high'?.14:quality==='low'?.10:note.duration;
  filter.type='lowpass';filter.frequency.value=quality==='high'?950:type===4?4200:10000;
  gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(sample.norm*.38*note.accent,start+.004);gain.gain.setTargetAtTime(.00001,start+duration,.075);s.connect(filter);if(quality==='low'){const scoop=c.createBiquadFilter(),hp=c.createBiquadFilter();scoop.type='peaking';scoop.frequency.value=850;scoop.Q.value=.65;scoop.gain.value=-14;hp.type='highpass';hp.frequency.value=170;filter.connect(hp).connect(scoop).connect(gain);}else filter.connect(gain);gain.connect(this.out);s.start(start);s.stop(start+duration+.32);
  if(quality==='low'){const buzz=this.track(c.createBufferSource()),buffer=c.createBuffer(1,Math.floor(c.sampleRate*.17),c.sampleRate),a=buffer.getChannelData(0);let seed=note.midi*913;for(let i=0;i<a.length;i++){seed=(seed*16807)%2147483647;a[i]=((seed/2147483647)*2-1)*Math.exp(-i/(c.sampleRate*.06))*(.4+.6*Math.max(0,Math.sin(i/c.sampleRate*440*2**((note.midi-69)/12)*Math.PI*2)));}buzz.buffer=buffer;const bp=c.createBiquadFilter(),bg=c.createGain();bp.type='bandpass';bp.frequency.value=2900;bp.Q.value=1.2;bg.gain.value=.13;buzz.connect(bp).connect(bg).connect(this.out);buzz.start(start);}
  }
- music(index,quality='good',delay=0,type=0){const score=phrase(index);if(!this.ctx)return 0;const start=this.ctx.currentTime+.06+delay;this.score=score;this.scoreStart=start;this.from=performance.now()+delay*1000+60;this.until=this.from+score.duration*1000;this.duckUntil=start+score.duration;if(this.enabled)for(const note of score.events)this.pluck(note,start+note.time,quality,type);return score.duration+.06+delay;}
+ music(index,quality='good',delay=0,type=0,{bars=2,at}={}){const score=phrase(index,bars);if(!this.ctx)return 0;const start=at??this.ctx.currentTime+.06+delay;this.score=score;this.scoreStart=start;this.from=performance.now()+Math.max(0,start-this.ctx.currentTime)*1000;this.until=this.from+score.duration*1000;this.duckUntil=Math.max(this.duckUntil,start+score.duration);if(this.enabled)for(const note of score.events)this.pluck(note,start+note.time,quality,type);return score.duration+Math.max(0,start-this.ctx.currentTime);}
  performance(){if(!this.score||!this.ctx||this.ctx.state!=='running')return null;const t=this.ctx.currentTime-this.scoreStart;if(t<0||t>this.score.duration)return null;let last=this.score.events[0];for(const event of this.score.events){if(event.time>t)break;last=event;}return{...last,age:t-last.time};}
  grind(on){if(!on){if(this.grinding){try{this.grinding.stop();}catch{}}this.grinding=null;return;}if(this.grinding||!this.enabled||!this.ctx)return;let b=this.ctx.createBuffer(1,this.ctx.sampleRate,this.ctx.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*.25;let s=this.track(this.ctx.createBufferSource());s.buffer=b;s.loop=true;let filter=this.ctx.createBiquadFilter();filter.type='bandpass';filter.frequency.value=950;filter.Q.value=.6;let gain=this.ctx.createGain();gain.gain.value=.06;s.connect(filter).connect(gain);gain.connect(this.out);s.start();this.grinding=s;}
  pop(){if(!this.enabled||!this.ctx)return;let b=this.ctx.createBuffer(1,this.ctx.sampleRate*.18,this.ctx.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*Math.exp(-i/(this.ctx.sampleRate*.035))*.15;let s=this.track(this.ctx.createBufferSource());s.buffer=b;s.connect(this.out);s.start();}
