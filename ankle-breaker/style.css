@@ -13,3 +13,6 @@
 
 /* Stop native double-tap/pinch zoom without blocking menu scrolling. */
 main.is-playing{touch-action:none}.overlay article{touch-action:pan-y}
+
+/* Wider margin for fast taps: entire pad including caption accepts any side, independently. */
+.pick-area{touch-action:none}#pick{height:142px!important}#pick svg{top:24px}#scene{bottom:285px}.performance{bottom:188px}.game-logo{bottom:300px}@media(max-height:650px){#pick{height:134px!important}#scene{bottom:277px}.performance{bottom:180px}.game-logo{bottom:290px}}

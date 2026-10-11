@@ -102,3 +102,73 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .board-group .pedal .value{font-size:8px;margin-top:4px;white-space:nowrap}
  .board-group .empty-slot span{font-size:22px}.board-group .empty-slot small{font-size:11px;line-height:1.25;white-space:normal}
 }
+/* Small reading frames also need a usable inventory, regardless of input device. */
+@media(max-width:680px),(pointer:coarse) and (orientation:landscape) and (max-height:550px){
+ #workbench{padding:6px 10px 9px;min-height:0}.micro,#notice{display:none!important}
+ .board-group{display:block}.board-meta{display:flex;align-items:center;height:26px;gap:6px;white-space:nowrap;min-width:0}
+ .board-meta .bench-title,.board-meta .bench-title>div{display:contents}.board-meta h1{font-size:11px;margin:0;line-height:1;order:1;flex-shrink:0}.full-label{display:none}.compact-label{display:inline}
+ .board-meta .energy-panel{order:2;flex:1;height:auto;min-height:0;margin:0;padding:0;border:0;background:none;gap:7px;justify-content:flex-start}.board-meta .energy-panel>div{flex-wrap:nowrap;gap:3px}.board-meta .energy-panel span{font-size:0}.board-meta .energy-panel span:after{font-size:8px}.board-meta .energy-panel>div:first-child span:after{content:'能量'}.board-meta .energy-panel>div:last-child span:after{content:'防禦'}.board-meta .energy-panel b{font-size:14px}.board-meta .energy-panel small{display:none}.board-meta .wallet{order:3;padding:2px 3px;font-size:11px}.board-meta .bench-tools{display:none}
+ .board-group .board-shell{height:80px;padding:6px;margin:0;width:100%;box-shadow:0 5px 8px #0005}
+ .board-group .pedal{height:64px;min-height:64px;padding:3px 4px;border-bottom-width:3px;display:grid;grid-template-columns:18px minmax(0,1fr);grid-template-rows:16px 14px 15px;gap:2px;align-items:center;justify-items:center}
+ .board-group .pedal .knobs{grid-column:1/-1;grid-row:1;height:16px;gap:4px}.board-group .pedal .knob{width:15px;height:15px}.board-group .pedal .knob.small{width:11px;height:11px}
+ .board-group .pedal strong{grid-column:1/-1;grid-row:2;margin:0;min-height:0;font-size:11px;line-height:14px;white-space:nowrap;letter-spacing:-.4px}
+ .board-group .pedal .led{position:absolute;top:5px;right:5px;width:4px;height:4px;margin:0}.board-group .pedal .footswitch{grid-column:1;grid-row:3;width:15px;height:15px}.board-group .pedal .value{grid-column:2;grid-row:3;font-size:7px;margin:0;line-height:12px;white-space:nowrap}
+ .board-group .pedal .model,.board-group .pedal .knob-label,.board-jacks,.chain-label{display:none}.board-group .empty-slot{height:64px;min-height:64px;padding:3px;display:flex;align-items:center;justify-content:center;gap:2px}.board-group .empty-slot span{font-size:19px;line-height:22px}.board-group .empty-slot small{font-size:11px}
+ .rack-header{margin:0;height:24px;min-height:24px;gap:6px}.rack-header>small{display:none}.rack-header #rack-count{font-size:9px}
+ .bench-scroll{min-height:128px;flex:1;display:block;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;padding-right:2px}
+ #workbench #rack{display:grid;height:auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;overflow:visible;margin:0;padding-bottom:4px}
+ #rack .rack-pedal{min-height:60px;padding:7px;gap:8px;touch-action:pan-y}#rack .rack-pedal strong{font-size:12px;line-height:1.2}#rack .rack-pedal small{font-size:10px;margin-top:4px}.mini-pedal{width:18px;height:29px}
+ .action-bar{margin-top:6px;flex-shrink:0}.action-bar button{min-height:44px;padding:8px 10px;font-size:12px}
+}
+@media(pointer:coarse) and (max-width:680px) and (orientation:portrait){
+ #stage{grid-template-rows:48px 112px minmax(0,1fr)}.vignette{top:160px}.board-group{padding:3px 10px}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){
+ .board-meta{height:24px;gap:4px}.board-meta h1{font-size:10px}.board-meta .energy-panel{gap:5px}.board-meta .wallet{font-size:10px}.bench-scroll{min-height:124px}#workbench{padding:4px 8px 7px}.rack-header{height:22px;min-height:22px}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:550px){
+ .short-landscape .board-group .board-shell{height:58px;padding:3px 5px}.short-landscape .board-group .pedal,.short-landscape .board-group .empty-slot{height:48px;min-height:48px;padding:1px 3px;border-bottom-width:2px}.short-landscape .board-group .pedal{grid-template-rows:14px 12px 13px;gap:2px}.short-landscape .board-group .pedal .knobs{height:14px}.short-landscape .board-group .pedal strong{font-size:10px;line-height:12px}.short-landscape .board-group .pedal .footswitch{width:13px;height:13px}.short-landscape .board-meta{height:18px}.short-landscape .rack-header{height:20px;min-height:20px}.short-landscape #workbench{padding:4px 8px}.short-landscape .action-bar{margin-top:4px}.short-landscape .bench-scroll{min-height:126px}
+}
+
+@media(max-width:680px){
+ .rack-header{display:flex;align-items:center;white-space:nowrap}.rack-header #damage-hud{position:static;display:flex;align-items:center;gap:6px;width:auto;min-width:0;flex:1;padding:0;border:0;border-radius:0;background:none;backdrop-filter:none;height:22px}.rack-header #damage-hud>div:first-child{display:flex;gap:5px;min-width:0;flex-shrink:0}.rack-header #damage-hud span{font-size:8px}.rack-header #damage{font-size:14px;line-height:1}.rack-header #damage small{font-size:9px}.rack-header .meter{flex:1;min-width:8px;margin:0;height:3px}.rack-header #reorder{width:28px;height:24px;min-width:28px;padding:0;background:#ffffff08;border:1px solid #ffffff1c;border-radius:4px;font-size:15px;line-height:1}.rack-header #reorder .swap-label{display:none}
+}
+
+/* Final annotated layout: one scene information strip and one equipment heading row. */
+@media(max-width:680px),(orientation:landscape) and (max-height:550px),(pointer:coarse) and (max-width:1100px){
+ main{height:var(--visible-height,var(--height));min-height:0}
+ #stage{height:100%;min-height:0;display:grid;grid-template-rows:48px minmax(0,1fr) 34px}
+ header{position:static;grid-row:1;padding:6px 10px;background:#172027}.brand{width:38px;height:29px}.job strong{font-size:12px}.job span{font-size:8px}nav button,nav a{font-size:10px;min-height:32px;padding:5px 7px}
+ #scene{grid-row:2;min-height:0}.vignette{top:48px;bottom:34px}.site-tag,#riff-caption,.micro,#notice,#chain-name{display:none!important}
+ #damage-hud{grid-row:3;position:static;display:flex;align-items:center;width:auto;min-width:0;height:34px;gap:8px;padding:3px 10px;border:0;border-radius:0;background:#182028;backdrop-filter:none}
+ #damage-hud>div:first-child{min-width:0;gap:4px;flex-shrink:0}#damage-hud span{font-size:8px}#damage{font-size:15px;line-height:1}#damage small{font-size:9px}#damage-hud>.meter{flex:1;min-width:12px;margin:0;height:3px}
+ #damage-hud .energy-panel{display:flex;gap:8px;height:auto;min-height:0;margin:0;padding:0;border:0;background:none;flex-shrink:0;white-space:nowrap}
+ #damage-hud .energy-panel>div{flex-wrap:nowrap;gap:3px}#damage-hud .energy-panel span{font-size:0}#damage-hud .energy-panel span:after{font-size:8px}#damage-hud .energy-panel>div:first-child span:after{content:'能量'}#damage-hud .energy-panel>div:last-child span:after{content:'防禦'}#damage-hud .energy-panel b{font-size:14px;line-height:1}#damage-hud .energy-panel small{display:none}
+ #damage-hud .stage-logo{position:static;width:29px;flex-shrink:0;filter:invert(1);opacity:.7}
+ #workbench{padding:5px 10px 9px;min-height:0;gap:0}.board-group{display:flex;padding:0;background:none;flex-shrink:0}.board-meta{display:flex;order:-1;height:30px;gap:7px;align-items:center;white-space:nowrap}
+ .board-meta .bench-title,.board-meta .bench-title>div{display:contents}.board-meta h1{order:1;display:block!important;font-size:13px;margin:0;line-height:1;flex-shrink:0}.full-label{display:inline}.compact-label{display:none}
+ .board-meta .rack-header{order:2;height:auto;min-height:0;margin:0;display:flex;flex-shrink:0;gap:0}.board-meta .rack-header>span{font-size:10px;line-height:1}.board-meta #rack-count{font-size:9px;margin-left:3px}.board-meta .rack-header>small{display:none}
+ .board-meta #reorder{order:3;display:block;min-height:26px;height:26px;padding:0 6px;font-size:14px;background:#ffffff08;border:1px solid #ffffff1c;border-radius:4px;flex-shrink:0}.board-meta #reorder .swap-label{display:none}.board-meta .wallet{order:4;margin-left:auto;font-size:11px;padding:2px 4px;flex-shrink:0}.board-meta .bench-tools{display:none}
+ .bench-scroll{margin-top:6px;min-height:142px;max-height:142px;height:142px;flex:0 0 142px;display:block;overflow-y:auto;touch-action:pan-y;overscroll-behavior:contain}
+ #workbench #rack{display:grid;height:auto;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;overflow:visible;align-content:start;padding-bottom:4px}
+ #rack .rack-pedal{min-height:60px;padding:6px 5px;gap:5px;touch-action:pan-y}#rack .rack-pedal strong{font-size:clamp(10px,2.8vw,12px);line-height:1.2}#rack .rack-pedal small{font-size:9px;line-height:1.2;margin-top:4px}.mini-pedal{width:14px;height:27px}
+ .action-bar{margin-top:6px;flex-shrink:0}.action-bar button{min-height:44px;padding:8px 10px;font-size:12px}
+}
+@media(max-width:680px) and (orientation:portrait),(pointer:coarse) and (max-width:1100px) and (orientation:portrait){
+ main{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;max-width:500px}#stage{grid-template-rows:48px minmax(0,1fr) 34px}
+}
+@media(orientation:landscape) and (max-height:550px){
+ main{display:grid;grid-template-columns:minmax(0,1fr) clamp(280px,39vw,360px)}#workbench{padding:4px 8px}.board-meta{height:26px;gap:5px}.board-meta h1{font-size:11px}.board-meta .rack-header>span{font-size:9px}.full-label{display:none}.compact-label{display:inline}
+ .board-group .board-shell{height:58px;padding:3px 5px}.board-group .pedal,.board-group .empty-slot{height:48px;min-height:48px;padding:1px 3px;border-bottom-width:2px}.board-group .pedal{display:grid;grid-template-columns:16px minmax(0,1fr);grid-template-rows:14px 12px 13px;gap:2px;align-items:center;justify-items:center}
+ .board-group .pedal .knobs{grid-column:1/-1;grid-row:1;height:14px}.board-group .pedal strong{grid-column:1/-1;grid-row:2;font-size:10px;line-height:12px;margin:0;min-height:0;white-space:nowrap}.board-group .pedal .led{position:absolute;top:4px;right:4px;width:4px;height:4px;margin:0}.board-group .pedal .footswitch{grid-column:1;grid-row:3;width:13px;height:13px}.board-group .pedal .value{grid-column:2;grid-row:3;font-size:7px;margin:0}.board-jacks,.chain-label,.board-group .model,.board-group .knob-label{display:none}
+ .board-group .empty-slot{display:flex;justify-content:center;align-items:center;gap:2px}.board-group .empty-slot span{font-size:18px;line-height:19px}.board-group .empty-slot small{font-size:10px}
+ .bench-scroll{margin-top:4px;min-height:134px;max-height:134px;height:134px;flex-basis:134px}.action-bar{margin-top:4px}#rack .rack-pedal strong{font-size:10px}.mini-pedal{width:12px}.board-meta .wallet{font-size:10px;padding:2px 3px}
+ #damage-hud{gap:5px;padding:3px 8px}#damage-hud .energy-panel{gap:7px}
+}
+@media(orientation:landscape) and (max-height:550px){.action-bar{margin-top:auto;padding-top:4px}}
+@media(orientation:landscape) and (max-height:550px){.short-landscape .action-bar{margin-top:auto;padding-top:4px}}
+
+@media(max-width:680px) and (orientation:portrait){
+ .tiny-height #stage{grid-template-rows:40px minmax(0,1fr) 28px}.tiny-height header{padding:4px 8px}.tiny-height #damage-hud{height:28px}.tiny-height .vignette{top:40px;bottom:28px}.tiny-height #workbench{padding:4px 8px}.tiny-height .board-meta{height:26px}
+ .tiny-height .board-group .board-shell{height:58px;padding:3px 5px}.tiny-height .board-group .pedal,.tiny-height .board-group .empty-slot{height:48px;min-height:48px;padding:1px 3px;border-bottom-width:2px}.tiny-height .board-group .pedal{grid-template-rows:14px 12px 13px;gap:2px}.tiny-height .board-group .pedal .knobs{height:14px}.tiny-height .board-group .pedal strong{font-size:10px;line-height:12px}.tiny-height .board-group .pedal .footswitch{width:13px;height:13px}.tiny-height .bench-scroll{margin-top:4px;height:134px;min-height:134px;max-height:134px;flex-basis:134px}.tiny-height .action-bar{margin-top:4px}
+}
