@@ -1,3 +1,5 @@
+2026-10-11 載入時機更正：按開始遊玩後才下載音訊；主選單及首頁預覽不提前下載、不播放配樂。下方舊版開場載入描述以此為準。
+
 AI 出氣拳 — Suno background loop (2026-10-11)
 
 Provided by the user for this game; the user authorized public game publication.
