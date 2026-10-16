@@ -16,8 +16,8 @@ html:not(.friend-embed) .game-card h2{font-size:clamp(26px,3vw,42px);font-weight
 html:not(.friend-embed) .game-side-nav{grid-column:2;grid-row:2;align-self:start;position:fixed;right:max(clamp(18px,3.6vw,58px),calc((100% - 1520px)/2 + 58px));bottom:72px;display:flex;flex-direction:column;width:clamp(170px,21vw,245px);min-width:0;background:#fff}
 html:not(.friend-embed) .game-side-nav a{display:flex;flex-direction:column;justify-content:center;min-height:34px;padding:2px 0;border-top:1px solid #bcbcbc;color:#171717;text-decoration:none}
 html:not(.friend-embed) .game-side-nav a:first-child{border-top:0}
-html:not(.friend-embed) .game-side-nav small{font:700 9px/1.2 Arial,sans-serif;letter-spacing:.01em}
-html:not(.friend-embed) .game-side-nav strong{font:700 clamp(15px,1.55vw,22px)/1 Arial,"Microsoft JhengHei",sans-serif;letter-spacing:-.05em}
+html:not(.friend-embed) .game-side-nav small{display:block;position:relative;top:2px;font:700 9px/1.2 Arial,sans-serif;letter-spacing:.01em}
+html:not(.friend-embed) .game-side-nav strong{position:relative;top:7px;font:700 clamp(15px,1.55vw,22px)/1 Arial,"Microsoft JhengHei",sans-serif;letter-spacing:-.05em}
 html:not(.friend-embed) .game-side-nav a:hover strong,html:not(.friend-embed) .game-side-nav a[aria-current=page] strong{text-decoration:none}
 html:not(.friend-embed) .game-side-nav a[aria-current=page] strong::after{content:"■";display:inline-block;margin-left:.4em;font-size:.36em;vertical-align:.28em;letter-spacing:0}
 html:not(.friend-embed) #game-nav-toggle{display:none}
