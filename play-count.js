@@ -6,7 +6,7 @@
   const token = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const urn = game => `qafstudio2.github.io/qaf-game/plays/${game}`;
   const style = document.createElement('style');
-  style.textContent = '.play-count{display:block;color:#657064!important;font:12px/1.5 system-ui,sans-serif!important;letter-spacing:0!important;margin:8px 0!important;min-height:18px}.game-card>.play-count{margin:-10px 0 16px!important}.friend-card .play-count{padding:0 12px 12px!important;margin:0!important}';
+  style.textContent = '.play-count{display:block;color:#657064!important;font:12px/1.5 system-ui,sans-serif!important;letter-spacing:0!important;margin:8px 0!important;min-height:18px}.game-facts .play-count{font-size:10px!important;line-height:1.3!important;min-height:13px;margin:0!important}.friend-card .play-count{padding:0 12px 12px!important;margin:0!important}';
   document.head.append(style);
   function render(game, failed = false) {
     document.querySelectorAll(`[data-play-count="${game}"]`).forEach(el => {
